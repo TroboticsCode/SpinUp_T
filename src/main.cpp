@@ -98,7 +98,7 @@ void usercontrol(void) {
     userDrive();
 
     // flywheel control
-    if (Controller1.ButtonLeft.pressing()) {
+    if (Controller1.ButtonDown.pressing()) {
       flywheelFront.spin(reverse);
       flywheelBack.spin(reverse);
     } else {
@@ -108,7 +108,7 @@ void usercontrol(void) {
 
     // intake control
     // make sure we dont pick up too many discs
-    if (Controller1.ButtonY.pressing() && discCount < 3) {
+    if (Controller1.ButtonB.pressing() && discCount < 3) {
       intake.spin(reverse);
     } else {
       intake.stop(coast);
