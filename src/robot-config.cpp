@@ -15,6 +15,7 @@ motor flywheelBack = motor(PORT6, BLUE, false);
 motor intake = motor(PORT7, GREEN, true);
 
 pneumatics piston = pneumatics(Brain.ThreeWirePort.A);
+bumper intakeSwitch = bumper(Brain.ThreeWirePort.B);
 // VEXcode generated functions
 
 

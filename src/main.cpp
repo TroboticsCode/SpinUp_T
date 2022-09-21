@@ -23,6 +23,10 @@ using namespace vex;
 competition Competition;
 
 // define your global instances of motors and other devices here
+uint32_t pressTime = 0;
+const uint8_t debounceTime = 50;
+uint8_t discCount = 0;
+bool updateScreen = true;
 
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
@@ -55,14 +59,14 @@ void autonomous(void) {
   case AutonB:
     Auton2();
     break;
-case AutonY:
+  case AutonY:
     Auton3();
     break;
 
   case SKILLS:
     skills();
     break;
-case SKILLS120:
+  case SKILLS120:
     break;
 
   // Default = NO autonomous
@@ -70,8 +74,6 @@ case SKILLS120:
     break;
   }
 }
-
-
 
 /*---------------------------------------------------------------------------*/
 /*                                                                           */
@@ -88,42 +90,68 @@ void usercontrol(void) {
   flywheelFront.setVelocity(100, pct);
   intake.setVelocity(100, pct);
 
+  bool pistonReleased = true;
+  bool intakeSwitchReleased = true;
+
   while (1) {
-    
+
     userDrive();
-   
-    if(Controller1.ButtonLeft.pressing())
-    {
+
+    // flywheel control
+    if (Controller1.ButtonLeft.pressing()) {
       flywheelFront.spin(reverse);
       flywheelBack.spin(reverse);
-    }
-    else 
-    {
+    } else {
       flywheelFront.stop(coast);
       flywheelBack.stop(coast);
     }
-    
-    if(Controller1.ButtonY.pressing())
-    {
+
+    // intake control
+    // make sure we dont pick up too many discs
+    if (Controller1.ButtonY.pressing() && discCount < 3) {
       intake.spin(reverse);
-    }
-    else
-    {
+    } else {
       intake.stop(coast);
     }
 
-    if(Controller1.ButtonRight.pressing())
-    {
+    // piston control
+    if (Controller1.ButtonRight.pressing()) {
+      if (pistonReleased && discCount > 0) {
+        discCount--;
+        updateScreen = true;
+      }
       piston.open();
+      pistonReleased = false;
+    } else {
+      piston.close();
+      pistonReleased = true;
+    }
+
+    // disc counting
+    if (intakeSwitch.pressing()) {
+      if ((Brain.Timer.system() - pressTime > debounceTime) && intakeSwitchReleased) {
+        discCount++;
+        updateScreen = true;
+        pressTime = Brain.Timer.system();
+        intakeSwitchReleased = false;
+      }
     }
     else
     {
-      piston.close();
+      intakeSwitchReleased = true;
     }
+
     wait(20, msec); // Sleep the task for a short amount of time to
+
+    if (updateScreen) {
+      updateScreen = false;
+      Controller1.Screen.setCursor(0, 0);
+      Controller1.Screen.clearLine();
+      Controller1.Screen.print("Disc Count: ");
+      Controller1.Screen.print(discCount);
+    }
   }
 }
-   
 
 // Main will set up the competition functions and callbacks.
 
