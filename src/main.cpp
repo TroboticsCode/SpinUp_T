@@ -98,7 +98,7 @@ void usercontrol(void) {
     userDrive();
 
     // flywheel control
-    if (Controller1.ButtonDown.pressing()) {
+    if (Controller1.ButtonL1.pressing()) {
       flywheelFront.spin(reverse);
       flywheelBack.spin(reverse);
     } else {
@@ -115,7 +115,7 @@ void usercontrol(void) {
     }
 
     // piston control
-    if (Controller1.ButtonRight.pressing()) {
+    if (Controller1.ButtonR1.pressing()) {
       if (pistonReleased && discCount > 0) {
         discCount--;
         updateScreen = true;
