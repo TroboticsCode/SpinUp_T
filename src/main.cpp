@@ -90,9 +90,6 @@ void usercontrol(void) {
   flywheelFront.setVelocity(100, pct);
   intake.setVelocity(100, pct);
 
-  bool pistonReleased = true;
-  bool intakeSwitchReleased = true;
-
   while (1) {
 
     userDrive();
@@ -108,7 +105,7 @@ void usercontrol(void) {
 
     // intake control
     // make sure we dont pick up too many discs
-    if (Controller1.ButtonB.pressing() && discCount < 3) {
+    if (Controller1.ButtonB.pressing() && !intakeSwitch.pressing()) {
       intake.spin(reverse);
     } else {
       intake.stop(coast);
@@ -116,40 +113,17 @@ void usercontrol(void) {
 
     // piston control
     if (Controller1.ButtonR1.pressing()) {
-      if (pistonReleased && discCount > 0) {
-        discCount--;
-        updateScreen = true;
-      }
       piston.open();
-      pistonReleased = false;
     } else {
       piston.close();
-      pistonReleased = true;
     }
 
-    // disc counting
-    if (intakeSwitch.pressing()) {
-      if ((Brain.Timer.system() - pressTime > debounceTime) && intakeSwitchReleased) {
-        discCount++;
-        updateScreen = true;
-        pressTime = Brain.Timer.system();
-        intakeSwitchReleased = false;
-      }
-    }
-    else
-    {
-      intakeSwitchReleased = true;
-    }
-
+    Brain.Screen.clearLine(0);
+    Brain.Screen.setCursor(1, 1);
+    Brain.Screen.print("Wheel Speed: ");
+    Brain.Screen.print(flywheelEncoder.velocity(rpm));
+    Brain.Screen.print(" RPM");
     wait(20, msec); // Sleep the task for a short amount of time to
-
-    if (updateScreen) {
-      updateScreen = false;
-      Controller1.Screen.setCursor(0, 0);
-      Controller1.Screen.clearLine();
-      Controller1.Screen.print("Disc Count: ");
-      Controller1.Screen.print(discCount);
-    }
   }
 }
 

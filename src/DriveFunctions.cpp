@@ -29,8 +29,14 @@ using namespace vex;
 void userDrive(void)
 {
 #ifdef ARCADE_CONTROL
-  int32_t horizontalAxis = Controller1.HORIZONTALAXIS.value()/1.1;
-  int32_t verticalAxis = Controller1.VERTICALAXIS.value()/1.1;
+  int32_t horizontalAxis = Controller1.HORIZONTALAXIS.value()/2;
+  int32_t verticalAxis = Controller1.VERTICALAXIS.value();
+
+  int32_t invertHorizontal = Controller1.INVERT_HORIZ.value()/2;
+  int32_t invertVertical = Controller1.INVERT_VERT.value();
+
+  const int posDeadzone = 15;
+  const int negDeadzone = -15;
   
   #ifdef CHASSIS_2_MOTOR_INLINE
     DriveRight.setBrake(brakeType::coast);
@@ -45,10 +51,25 @@ void userDrive(void)
     BackLeft.setBrake(brakeType::coast);
     FrontLeft.setBrake(brakeType::coast);
 
-    BackRight.spin(directionType::fwd, (verticalAxis - (horizontalAxis)), velocityUnits::pct);
-    BackLeft.spin(directionType::fwd, (verticalAxis + (horizontalAxis)), velocityUnits::pct);
-    FrontRight.spin(directionType::fwd, (verticalAxis - (horizontalAxis)), velocityUnits::pct);
-    FrontLeft.spin(directionType::fwd, (verticalAxis + (horizontalAxis)), velocityUnits::pct);
+    //check if the right stick is being moved or else use the left stick for control
+    if(horizontalAxis < negDeadzone || 
+      horizontalAxis > posDeadzone ||
+      verticalAxis < negDeadzone ||
+      verticalAxis > posDeadzone)
+    {
+      BackRight.spin(directionType::fwd, (verticalAxis - (horizontalAxis)), velocityUnits::pct);
+      BackLeft.spin(directionType::fwd, (verticalAxis + (horizontalAxis)), velocityUnits::pct);
+      FrontRight.spin(directionType::fwd, (verticalAxis - (horizontalAxis)), velocityUnits::pct);
+      FrontLeft.spin(directionType::fwd, (verticalAxis + (horizontalAxis)), velocityUnits::pct);
+    }
+
+  else
+  {
+      BackRight.spin(directionType::rev, (invertVertical + (invertHorizontal)), velocityUnits::pct);
+      BackLeft.spin(directionType::rev, (invertVertical - (invertHorizontal)), velocityUnits::pct);
+      FrontRight.spin(directionType::rev, (invertVertical + (invertHorizontal)), velocityUnits::pct);
+      FrontLeft.spin(directionType::rev, (invertVertical - (invertHorizontal)), velocityUnits::pct);  
+  }
   #endif
 
 #elif defined TANK_CONTROL
