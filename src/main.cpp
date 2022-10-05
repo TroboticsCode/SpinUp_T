@@ -105,10 +105,25 @@ void usercontrol(void) {
 
     // intake control
     // make sure we dont pick up too many discs
-    if (Controller1.ButtonB.pressing() && !intakeSwitch.pressing()) {
+    if (Controller1.ButtonY.pressing() && !intakeSwitch.pressing()) 
+    {
       intake.spin(reverse);
-    } else {
+    }
+    else if(Controller1.ButtonRight.pressing())
+    {
+      intake.spin(fwd);
+    }
+    else {
       intake.stop(coast);
+    }
+
+    //roller control
+    if (Controller1.ButtonB.pressing()) 
+    {
+      rollerWheel.spin(reverse);
+    }
+    else {
+      rollerWheel.stop(coast);
     }
 
     // piston control

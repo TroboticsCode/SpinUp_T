@@ -13,6 +13,7 @@ controller Controller1 = controller(primary);
 motor flywheelFront = motor(PORT5, BLUE, true);
 motor flywheelBack = motor(PORT6, BLUE, false);
 motor intake = motor(PORT7, GREEN, true);
+motor rollerWheel = motor(PORT8, RED, false);
 
 pneumatics piston = pneumatics(Brain.ThreeWirePort.A);
 bumper intakeSwitch = bumper(Brain.ThreeWirePort.B);
