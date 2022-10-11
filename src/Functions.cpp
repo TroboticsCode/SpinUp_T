@@ -13,3 +13,42 @@ void testPID() {
   wait(20, msec); // Sleep the task for a short amount of time t
 }
 
+void enableFlywheel(void)
+{
+  flywheelFront.spin(reverse);
+  flywheelBack.spin(reverse);
+}
+
+void disableFlywheel(void)
+{
+  flywheelFront.stop(coast);
+  flywheelBack.stop(coast);
+}
+
+void enableIntake(void)
+{
+  intake.spin(fwd);
+}
+
+void enableRollerWheel(void)
+{
+  rollerWheel.spin(reverse);
+}
+
+void disableIntake(void)
+{
+  intake.stop(coast);
+}
+
+void fireDisc(void)
+{
+  piston.open();
+  wait(500, msec);
+  piston.close();
+  wait(500, msec);
+}
+
+void disableRollerWheel(void)
+{
+  rollerWheel.stop();
+}

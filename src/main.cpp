@@ -24,7 +24,6 @@ competition Competition;
 
 // define your global instances of motors and other devices here
 uint32_t pressTime = 0;
-const uint8_t debounceTime = 50;
 uint8_t discCount = 0;
 bool updateScreen = true;
 
@@ -42,7 +41,7 @@ void pre_auton(void) {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
 
-  Controller1.ButtonR1.pressed(cycle_autons);
+  Controller1.ButtonUp.pressed(cycle_autons);
   Brain.Screen.pressed(cycle_autons);
   return;
 }

@@ -15,5 +15,12 @@
 //lift, claw, etc
 //drive function prototypes can go here but they should be in the DriveFunctions.h file
 void testPID(void);
+void enableFlywheel(void);
+void disableFlywheel(void);
+void enableIntake(void);
+void enableRollerWheel(void);
+void disableRollerWheel(void);
+void disableIntake(void);
+void fireDisc(void);
 
 #endif
