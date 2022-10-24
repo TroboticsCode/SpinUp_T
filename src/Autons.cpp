@@ -52,11 +52,30 @@ void Auton2() {
 
 }
 
-void skills() { //this grabs one yellow goal and gets the win point
-  
+void skills() {
+  enableRollerWheel();
+  wait(3, seconds);
+  disableRollerWheel();
+  moveLinear(29, 80, 30000);
+  moveRotate(90, 80, 3000);
+  moveLinear(35, 80, 30000);
+  enableRollerWheel();
+  wait(3, seconds);
+  disableRollerWheel();
+  moveLinear(30, 80, 3000);
+  moveRotate(180, 80, 3000);
+  enableIntake();
+  moveLinear(20, 80, 3000);
+  enableFlywheel();
+  waitUntil(flywheelEncoder.velocity(rpm) > 3000);
+  fireDisc();enableFlywheel();
+  waitUntil(flywheelEncoder.velocity(rpm) > 3000);
+  fireDisc();enableFlywheel();
+  waitUntil(flywheelEncoder.velocity(rpm) > 3000);
+  fireDisc();
 }
 
-void Auton3(){ //yellow goal blitz
+void Auton3(){ 
 
 }
 
