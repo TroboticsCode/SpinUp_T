@@ -36,16 +36,20 @@ void Auton1() {
   fireDisc();
   //step 6:
   disableFlywheel();
+
   //step 7:
   moveRotate(30, 100, 3000);
   moveLinear(-8, 100, 3000);
   moveRotate(-20, 100, 3000);
   moveStop(hold);
-  //step 9:
+
+  //step 8:
   enableRollerWheel();
-  wait(3, seconds);
-  //step 10:
+  uint32_t currTime = Brain.Timer.system();
+  while((colorSensor.color() != color::red) && (Brain.Timer.system() - currTime < 3000));
   disableRollerWheel();
+
+  //step 9:
 }
 
 void Auton2() {
@@ -53,24 +57,37 @@ void Auton2() {
 }
 
 void skills() {
+  setRotGains(.05, 0.00000000001, 0, 20, 10); //update PID gains to tune robot
+  setLinGains(200, 0, 0, 20, 10);
+
   enableRollerWheel();
   wait(3, seconds);
   disableRollerWheel();
+
   moveLinear(29, 80, 30000);
   moveRotate(90, 80, 3000);
   moveLinear(35, 80, 30000);
+
   enableRollerWheel();
+
   wait(3, seconds);
+
   disableRollerWheel();
+
   moveLinear(30, 80, 3000);
   moveRotate(180, 80, 3000);
+
   enableIntake();
+
   moveLinear(20, 80, 3000);
+
   enableFlywheel();
   waitUntil(flywheelEncoder.velocity(rpm) > 3000);
-  fireDisc();enableFlywheel();
+  fireDisc();
+  enableFlywheel();
   waitUntil(flywheelEncoder.velocity(rpm) > 3000);
-  fireDisc();enableFlywheel();
+  fireDisc();
+  enableFlywheel();
   waitUntil(flywheelEncoder.velocity(rpm) > 3000);
   fireDisc();
 }

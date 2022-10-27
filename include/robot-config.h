@@ -11,12 +11,13 @@ extern controller Controller1;
 extern motor flywheelFront;
 extern motor flywheelBack;
 extern motor rollerWheel;
-
 extern motor intake;
 
 extern pneumatics piston;
 extern bumper intakeSwitch;
 extern encoder flywheelEncoder;
+
+extern optical colorSensor;
 
  /* Used to initialize code/tasks/devices added using tools in VEXcode Text.
  * 

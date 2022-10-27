@@ -89,18 +89,38 @@ void usercontrol(void) {
   flywheelFront.setVelocity(100, pct);
   intake.setVelocity(100, pct);
 
+  bool flyWheelButtonReleased = false;
+  bool flyWheelState = false;
+
+  
+
   while (1) {
 
     userDrive();
 
-    // flywheel control
+    // flywheel control - button toggles on or off
     if (Controller1.ButtonL1.pressing()) {
-      flywheelFront.spin(reverse);
-      flywheelBack.spin(reverse);
-    } else {
-      flywheelFront.stop(coast);
-      flywheelBack.stop(coast);
+      if(flyWheelButtonReleased)
+      {
+        flyWheelButtonReleased = false;
+        flyWheelState = !flyWheelState;
+        
+        if(flyWheelState)
+        {
+          flywheelFront.spin(reverse);
+          flywheelBack.spin(reverse);
+        }
+        else
+        {
+          flywheelFront.stop(coast);
+          flywheelBack.stop(coast);
+        }
+      }
+    } 
+    else{
+      flyWheelButtonReleased = true;
     }
+      
 
     // intake control
     // make sure we dont pick up too many discs
