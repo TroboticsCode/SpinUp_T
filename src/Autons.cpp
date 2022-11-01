@@ -61,7 +61,8 @@ void skills() {
   setLinGains(200, 0, 0, 20, 10);
 
   enableRollerWheel();
-  wait(3, seconds);
+  uint32_t currTime = Brain.Timer.system();
+  while((colorSensor.color() != color::red) && (Brain.Timer.system() - currTime < 3000));
   disableRollerWheel();
 
   moveLinear(29, 80, 30000);
