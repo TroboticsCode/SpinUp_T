@@ -143,8 +143,8 @@ void moveLinear(float distance, int velocity, uint32_t timeOut)
     #if defined (CHASSIS_2_MOTOR_INLINE)
       printPIDValues(&driveR_PID);
       DriveR_Power = (velocity/100.0f) * pidCalculate(&driveR_PID, rotations, DriveRight.rotation(rev) / 100.0);
-      DriveL_Power = (velocity/100.0f) * pidCalculate(&driveL_PID, rotations, DriveLeft.rotation(rev) / 100.0);
-
+      DL_Power = (velocity/100.0f) * pidCalculate(&driveL_PID, rotations, DriveLeft.rotation(rev) / 100.0);
+rive
       DriveRight.spin(forward, 12 * DriveR_Power, voltageUnits::volt);
       DriveLeft.spin(forward, 12 * DriveL_Power, voltageUnits::volt);
 

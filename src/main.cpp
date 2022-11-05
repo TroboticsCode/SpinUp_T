@@ -85,10 +85,13 @@ void autonomous(void) {
 /*---------------------------------------------------------------------------*/
 
 void usercontrol(void) {
-  flywheelBack.setVelocity(100, pct);
-  flywheelFront.setVelocity(100, pct);
+  flywheelBack.setVelocity(95, pct);
+  flywheelFront.setVelocity(95, pct);
   intake.setVelocity(100, pct);
-
+//close up is at 60%
+//midfield 75%
+//auton starting spot 80%
+//full diagnol 95%
   bool flyWheelButtonReleased = false;
   bool flyWheelState = false;
 
