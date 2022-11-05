@@ -92,72 +92,35 @@ void usercontrol(void) {
   bool flyWheelButtonReleased = false;
   bool flyWheelState = false;
 
-  pidStruct_t flywheel_PID;
-  pidInit(&flywheel_PID, 1, 1, 0, 1000, 1);
-  float     flywheel_power = 0;
-  uint16_t  flywheelSpeeds[] = {1000, 2000, 32000};
-  uint8_t   numflywheel_speeds = 3;
-  uint8_t   flywheel_speed_selection = 0;
-  bool      flywheel_speed_button_released = false;
-
   while (1) {
 
     userDrive();
 
     // flywheel control - button toggles on or off
-    if (Controller1.ButtonL1.pressing()) {
+    if (Controller1.ButtonL1.pressing()) 
+    {
       if(flyWheelButtonReleased)
       {
-        flyWheelButtonReleased = false;
-        flyWheelState = !flyWheelState;
+         flyWheelButtonReleased = false;
+         flyWheelState = !flyWheelState;
+
+         if(flyWheelState)
+         {
+           flywheelFront.spin(reverse);
+           flywheelBack.spin(reverse);
+         }
+         else
+         {
+           flywheelFront.stop(coast);
+           flywheelBack.stop(coast);
+         }
       }
     } 
-    else{
+    else
+    {
       flyWheelButtonReleased = true;
     }
-
-    if(Controller1.ButtonLeft.pressing() || Controller1.ButtonRight.pressing())
-    {
-      if(flywheel_speed_button_released)
-      {
-        flywheel_speed_button_released = false;
-      }
-      if(Controller1.ButtonLeft.pressing())
-      {
-        if(flywheel_speed_selection > 0)
-          flywheel_speed_selection--;
-      }
-      else if(Controller1.ButtonRight.pressing())
-      {
-        if(flywheel_speed_selection < numflywheel_speeds)
-          flywheel_speed_selection++;
-      }
-
-      Controller1.Screen.clearLine();
-      Controller1.Screen.print("Flywheel Speed Setting: ");
-      Controller1.Screen.print(flywheel_speed_selection);
-    }
-    else
-    {
-      flywheel_speed_button_released = true;
-    }
-
-    //flywheel speed control
-    if(flyWheelState)
-    {
-      flywheel_power = pidCalculate(&flywheel_PID, flywheelSpeeds[flywheel_speed_selection], flywheelEncoder.velocity(rpm)) / 3200;
-      printPIDValues(&flywheel_PID);
-
-      flywheelFront.spin(reverse, 12 * flywheel_power, voltageUnits::volt);
-      flywheelBack.spin(reverse, 12 * flywheel_power, voltageUnits::volt);
-    }
-    else
-    {
-      flywheelFront.stop(coast);
-      flywheelBack.stop(coast);
-    }
       
-
     // intake control
     // make sure we dont pick up too many discs
     if (Controller1.ButtonY.pressing() && !intakeSwitch.pressing()) 
