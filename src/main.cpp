@@ -93,9 +93,9 @@ void usercontrol(void) {
   bool flyWheelState = false;
 
   pidStruct_t flywheel_PID;
-  pidInit(&flywheel_PID, 1, 1, 0, 1000, 1);
+  pidInit(&flywheel_PID, 1, 0, 0, 1000, 1);
   float     flywheel_power = 0;
-  uint16_t  flywheelSpeeds[] = {1000, 2000, 32000};
+  uint16_t  flywheelSpeeds[] = {1000, 2000, 3200};
   uint8_t   numflywheel_speeds = 3;
   uint8_t   flywheel_speed_selection = 0;
   bool      flywheel_speed_button_released = false;
@@ -116,26 +116,26 @@ void usercontrol(void) {
       flyWheelButtonReleased = true;
     }
 
-    if(Controller1.ButtonLeft.pressing() || Controller1.ButtonRight.pressing())
+    if(Controller1.ButtonL2.pressing() || Controller1.ButtonR2.pressing())
     {
       if(flywheel_speed_button_released)
       {
         flywheel_speed_button_released = false;
-      }
-      if(Controller1.ButtonLeft.pressing())
-      {
-        if(flywheel_speed_selection > 0)
-          flywheel_speed_selection--;
-      }
-      else if(Controller1.ButtonRight.pressing())
-      {
-        if(flywheel_speed_selection < numflywheel_speeds)
-          flywheel_speed_selection++;
-      }
+        if(Controller1.ButtonL2.pressing())
+        {
+          if(flywheel_speed_selection > 0)
+            flywheel_speed_selection--;
+        }
+        else if(Controller1.ButtonR2.pressing())
+        {
+          if(flywheel_speed_selection < numflywheel_speeds)
+            flywheel_speed_selection++;
+        }
 
-      Controller1.Screen.clearLine();
-      Controller1.Screen.print("Flywheel Speed Setting: ");
-      Controller1.Screen.print(flywheel_speed_selection);
+        Controller1.Screen.clearLine();
+        Controller1.Screen.print("Flywheel Speed Setting: ");
+        Controller1.Screen.print(flywheel_speed_selection);
+      }
     }
     else
     {
