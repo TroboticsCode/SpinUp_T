@@ -25,28 +25,35 @@ void Auton1() {
 
   //moveLinear(float distance, int velocity, uint32_t timeOut);
   // step 1:
+  flywheelBack.setVelocity(-90, pct);
+  flywheelFront.setVelocity(-90, pct);
   enableFlywheel();
   //step 2:
-  waitUntil(flywheelEncoder.velocity(rpm) > 3000);
+  //waitUntil(flywheelEncoder.velocity(rpm) > 2500);
+  flywheelBack.setVelocity(-95, pct);
+  flywheelFront.setVelocity(-95, pct);
+  wait(1000, msec);
   //step 3:
   fireDisc();
   //step 4:
-  waitUntil(flywheelEncoder.velocity(rpm) > 3000);
+  //waitUntil(flywheelEncoder.velocity(rpm) > 2500);
+  wait(1000,msec);
   //step 5:
   fireDisc();
   //step 6:
   disableFlywheel();
 
-  //step 7:
-  moveRotate(30, 100, 3000);
-  moveLinear(-8, 100, 3000);
-  moveRotate(-20, 100, 3000);
+  //step 7: align with color roller
+  moveRotate(35, 100, 3000);
+  moveLinear(-4, 100, 3000);
+  moveRotate(-30, 100, 3000);
+  moveLinear(-2, 100, 3000);
   moveStop(hold);
 
-  //step 8:
+  //step 8: turn roller
   enableRollerWheel();
   uint32_t currTime = Brain.Timer.system();
-  while((colorSensor.color() != color::red) && (Brain.Timer.system() - currTime < 3000));
+  while((colorSensor.color() != color::blue) && (Brain.Timer.system() - currTime < 3000));
   disableRollerWheel();
 
   //step 9:

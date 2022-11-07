@@ -15,8 +15,8 @@ void testPID() {
 
 void enableFlywheel(void)
 {
-  flywheelFront.spin(reverse);
-  flywheelBack.spin(reverse);
+  flywheelFront.spin(forward);
+  flywheelBack.spin(forward);
 }
 
 void disableFlywheel(void)

@@ -19,7 +19,7 @@ pneumatics piston = pneumatics(Brain.ThreeWirePort.A);
 bumper intakeSwitch = bumper(Brain.ThreeWirePort.B);
 encoder flywheelEncoder = encoder(Brain.ThreeWirePort.C);
 
-optical colorSensor = optical(PORT10, false);
+optical colorSensor = optical(PORT11, false);
 // VEXcode generated functions
 
 

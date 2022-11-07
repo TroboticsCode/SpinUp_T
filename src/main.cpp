@@ -32,9 +32,9 @@ bool updateScreen = true;
 //auton starting spot 80%
 //full diagnol 95%
 
-uint8_t flywheelSpeeds[] = {60, 75, 80, 95};
+uint8_t flywheelSpeeds[] = {55, 60, 65, 70, 75, 80, 85, 90, 95};
 uint8_t speedSelector = 0;
-const uint8_t numSpeed = 4;
+const uint8_t numSpeed = 9;
 
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
@@ -107,7 +107,7 @@ void increaseSpeed(void)
       Controller1.Screen.clearLine();
       Controller1.Screen.setCursor(1, 1);
 
-      Controller1.Screen.print("speed: %d",speedSelector+1);
+      Controller1.Screen.print("speed: %d",flywheelSpeeds[speedSelector]);
     }
       pressTime = Brain.Timer.system();
   }
@@ -126,7 +126,7 @@ void decreaseSpeed(void)
     Controller1.Screen.clearLine();
     Controller1.Screen.setCursor(1, 1);
 
-    Controller1.Screen.print("speed: %d",speedSelector+1);
+    Controller1.Screen.print("speed: %d",flywheelSpeeds[speedSelector]);
   }
 }
 void usercontrol(void) {
@@ -141,11 +141,11 @@ void usercontrol(void) {
   bool flywheelSpeedButtonReleased = false;
 
 
-  Controller1.Screen.setCursor(1, 1);
+  /*Controller1.Screen.setCursor(1, 1);
   Controller1.Screen.clearLine();
   Controller1.Screen.setCursor(1, 1);
 
-  Controller1.Screen.print("speed: %d",speedSelector+1);
+  Controller1.Screen.print("speed: %d",flywheelSpeeds[speedSelector]);*/
 
   while (1) {
 
