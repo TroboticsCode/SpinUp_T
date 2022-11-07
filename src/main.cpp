@@ -27,6 +27,15 @@ uint32_t pressTime = 0;
 uint8_t discCount = 0;
 bool updateScreen = true;
 
+//close up is at 60%
+//midfield 75%
+//auton starting spot 80%
+//full diagnol 95%
+
+uint8_t flywheelSpeeds[] = {60, 75, 80, 95};
+uint8_t speedSelector = 0;
+const uint8_t numSpeed = 4;
+
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
 /*                                                                           */
@@ -83,17 +92,60 @@ void autonomous(void) {
 /*                                                                           */
 /*  You must modify the code to add your own robot specific commands here.   */
 /*---------------------------------------------------------------------------*/
+void increaseSpeed(void)
+{
+  if(Brain.Timer.system() - pressTime > 200)
+  {
+    if(speedSelector < numSpeed - 1)
+    {
+      speedSelector++;
 
+      flywheelBack.setVelocity(-1*flywheelSpeeds[speedSelector], pct);
+      flywheelFront.setVelocity(-1*flywheelSpeeds[speedSelector], pct);
+
+      Controller1.Screen.setCursor(1, 1);
+      Controller1.Screen.clearLine();
+      Controller1.Screen.setCursor(1, 1);
+
+      Controller1.Screen.print("speed: %d",speedSelector+1);
+    }
+      pressTime = Brain.Timer.system();
+  }
+}
+
+void decreaseSpeed(void)
+{
+  if(speedSelector > 0)
+  {
+    speedSelector--;
+
+    flywheelBack.setVelocity(-1*flywheelSpeeds[speedSelector], pct);
+    flywheelFront.setVelocity(-1*flywheelSpeeds[speedSelector], pct);
+
+    Controller1.Screen.setCursor(1, 1);
+    Controller1.Screen.clearLine();
+    Controller1.Screen.setCursor(1, 1);
+
+    Controller1.Screen.print("speed: %d",speedSelector+1);
+  }
+}
 void usercontrol(void) {
-  flywheelBack.setVelocity(95, pct);
-  flywheelFront.setVelocity(95, pct);
+
+  flywheelBack.setVelocity(-1*flywheelSpeeds[speedSelector], pct);
+  flywheelFront.setVelocity(-1*flywheelSpeeds[speedSelector], pct);
   intake.setVelocity(100, pct);
-//close up is at 60%
-//midfield 75%
-//auton starting spot 80%
-//full diagnol 95%
+
   bool flyWheelButtonReleased = false;
   bool flyWheelState = false;
+
+  bool flywheelSpeedButtonReleased = false;
+
+
+  Controller1.Screen.setCursor(1, 1);
+  Controller1.Screen.clearLine();
+  Controller1.Screen.setCursor(1, 1);
+
+  Controller1.Screen.print("speed: %d",speedSelector+1);
 
   while (1) {
 
@@ -109,8 +161,8 @@ void usercontrol(void) {
 
          if(flyWheelState)
          {
-           flywheelFront.spin(reverse);
-           flywheelBack.spin(reverse);
+           flywheelFront.spin(forward);
+           flywheelBack.spin(forward);
          }
          else
          {
@@ -122,6 +174,27 @@ void usercontrol(void) {
     else
     {
       flyWheelButtonReleased = true;
+    }
+
+    //flywheel speed control
+    if(Controller1.ButtonR2.pressing() || Controller1.ButtonL2.pressing())
+    {
+      if(flywheelSpeedButtonReleased)
+      {
+        if(Controller1.ButtonR2.pressing())
+        {
+          increaseSpeed();
+        }
+        else if(Controller1.ButtonL2.pressing())
+        {
+          decreaseSpeed();
+        }
+      }
+      flywheelSpeedButtonReleased = false;
+    }
+    else
+    {
+      flywheelSpeedButtonReleased = true;
     }
       
     // intake control
