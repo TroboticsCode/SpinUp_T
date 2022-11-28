@@ -25,38 +25,43 @@ void Auton1() {
 
   //moveLinear(float distance, int velocity, uint32_t timeOut);
   // step 1:
-  flywheelBack.setVelocity(-60, pct);
-  flywheelFront.setVelocity(-60, pct);
+  flywheelBack.setVelocity(-75, pct);
+  flywheelFront.setVelocity(-75, pct);
+  
   enableFlywheel();
   //step 2:
   //waitUntil(flywheelEncoder.velocity(rpm) > 2500);
-  flywheelBack.setVelocity(-70, pct);
-  flywheelFront.setVelocity(-70, pct);
+  
   wait(2000, msec);
   //step 3:
   fireDisc();
   //step 4:
+  flywheelBack.setVelocity(-90, pct);
+  flywheelFront.setVelocity(-90, pct);
   //waitUntil(flywheelEncoder.velocity(rpm) > 2500);
-  wait(1000,msec);
+  wait(2000,msec);
   //step 5:
   fireDisc();
   //step 6:
   disableFlywheel();
 
   //step 7: align with color roller
-  moveRotate(40, 100, 3000);
-  moveLinear(-5, 100, 3000);
-  moveRotate(-40, 100, 3000);
-  moveLinear(-3, 100, 3000);
+  moveRotate(40, 100, 1000);
+  moveLinear(-10, 100, 1000);
+  //40, -5; 45, -20
+  moveRotate(-35, 100, 1000);
+  moveLinear(-3, 100, 1000);
   moveStop(hold);
 
   //step 8: turn roller
   enableRollerWheel();
   uint32_t currTime = Brain.Timer.system();
-  while((colorSensor.color() != color::blue) && (Brain.Timer.system() - currTime < 3000));
+  while((colorSensor.color() != color::blue) && (Brain.Timer.system() - currTime < 500));
   disableRollerWheel();
 
   //step 9:
+
+  //ropeLauncher.open();
 }
 
 void Auton2() {

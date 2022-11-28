@@ -14,6 +14,8 @@ extern motor rollerWheel;
 extern motor intake;
 
 extern pneumatics piston;
+extern pneumatics ropeLauncher;
+
 extern bumper intakeSwitch;
 extern encoder flywheelEncoder;
 

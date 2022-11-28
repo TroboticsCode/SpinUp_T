@@ -16,6 +16,7 @@ motor intake = motor(PORT7, GREEN, true);
 motor rollerWheel = motor(PORT8, RED, false);
 
 pneumatics piston = pneumatics(Brain.ThreeWirePort.A);
+pneumatics ropeLauncher = pneumatics(Brain.ThreeWirePort.E);
 bumper intakeSwitch = bumper(Brain.ThreeWirePort.B);
 encoder flywheelEncoder = encoder(Brain.ThreeWirePort.C);
 

@@ -27,14 +27,14 @@ uint32_t pressTime = 0;
 uint8_t discCount = 0;
 bool updateScreen = true;
 
-//close up is at 60%
-//midfield 75%
-//auton starting spot 80%
-//full diagnol 95%
+// close up is at 60%
+// midfield 75%
+// auton starting spot 80%
+// full diagnol 95%
 
-uint8_t flywheelSpeeds[] = {55, 60, 65, 70, 75, 80, 85, 90, 95};
-uint8_t speedSelector = 0;
-const uint8_t numSpeed = 9;
+uint8_t flywheelSpeeds[] = {55, 60, 65, 70, 75, 80, 85, 90, 95, 100};
+uint8_t speedSelector = 7;
+const uint8_t numSpeed = 10;
 
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
@@ -92,47 +92,42 @@ void autonomous(void) {
 /*                                                                           */
 /*  You must modify the code to add your own robot specific commands here.   */
 /*---------------------------------------------------------------------------*/
-void increaseSpeed(void)
-{
-  if(Brain.Timer.system() - pressTime > 200)
-  {
-    if(speedSelector < numSpeed - 1)
-    {
+void increaseSpeed(void) {
+  if (Brain.Timer.system() - pressTime > 200) {
+    if (speedSelector < numSpeed - 1) {
       speedSelector++;
 
-      flywheelBack.setVelocity(-1*flywheelSpeeds[speedSelector], pct);
-      flywheelFront.setVelocity(-1*flywheelSpeeds[speedSelector], pct);
+      flywheelBack.setVelocity(-1 * flywheelSpeeds[speedSelector], pct);
+      flywheelFront.setVelocity(-1 * flywheelSpeeds[speedSelector], pct);
 
       Controller1.Screen.setCursor(1, 1);
       Controller1.Screen.clearLine();
       Controller1.Screen.setCursor(1, 1);
 
-      Controller1.Screen.print("speed: %d",flywheelSpeeds[speedSelector]);
+      Controller1.Screen.print("speed: %d", flywheelSpeeds[speedSelector]);
     }
-      pressTime = Brain.Timer.system();
+    pressTime = Brain.Timer.system();
   }
 }
 
-void decreaseSpeed(void)
-{
-  if(speedSelector > 0)
-  {
+void decreaseSpeed(void) {
+  if (speedSelector > 0) {
     speedSelector--;
 
-    flywheelBack.setVelocity(-1*flywheelSpeeds[speedSelector], pct);
-    flywheelFront.setVelocity(-1*flywheelSpeeds[speedSelector], pct);
+    flywheelBack.setVelocity(-1 * flywheelSpeeds[speedSelector], pct);
+    flywheelFront.setVelocity(-1 * flywheelSpeeds[speedSelector], pct);
 
     Controller1.Screen.setCursor(1, 1);
     Controller1.Screen.clearLine();
     Controller1.Screen.setCursor(1, 1);
 
-    Controller1.Screen.print("speed: %d",flywheelSpeeds[speedSelector]);
+    Controller1.Screen.print("speed: %d", flywheelSpeeds[speedSelector]);
   }
 }
 void usercontrol(void) {
 
-  flywheelBack.setVelocity(-1*flywheelSpeeds[speedSelector], pct);
-  flywheelFront.setVelocity(-1*flywheelSpeeds[speedSelector], pct);
+  flywheelBack.setVelocity(-1 * flywheelSpeeds[speedSelector], pct);
+  flywheelFront.setVelocity(-1 * flywheelSpeeds[speedSelector], pct);
   intake.setVelocity(100, pct);
 
   bool flyWheelButtonReleased = false;
@@ -140,83 +135,64 @@ void usercontrol(void) {
 
   bool flywheelSpeedButtonReleased = false;
 
+  ropeLauncher.close();
 
-  /*Controller1.Screen.setCursor(1, 1);
+  Controller1.Screen.setCursor(1, 1);
   Controller1.Screen.clearLine();
   Controller1.Screen.setCursor(1, 1);
 
-  Controller1.Screen.print("speed: %d",flywheelSpeeds[speedSelector]);*/
+  Controller1.Screen.print("speed: %d", flywheelSpeeds[speedSelector]);
 
   while (1) {
 
     userDrive();
 
     // flywheel control - button toggles on or off
-    if (Controller1.ButtonL1.pressing()) 
-    {
-      if(flyWheelButtonReleased)
-      {
-         flyWheelButtonReleased = false;
-         flyWheelState = !flyWheelState;
+    if (Controller1.ButtonL1.pressing()) {
+      if (flyWheelButtonReleased) {
+        flyWheelButtonReleased = false;
+        flyWheelState = !flyWheelState;
 
-         if(flyWheelState)
-         {
-           flywheelFront.spin(forward);
-           flywheelBack.spin(forward);
-         }
-         else
-         {
-           flywheelFront.stop(coast);
-           flywheelBack.stop(coast);
-         }
+        if (flyWheelState) {
+          flywheelFront.spin(forward);
+          flywheelBack.spin(forward);
+        } else {
+          flywheelFront.stop(coast);
+          flywheelBack.stop(coast);
+        }
       }
-    } 
-    else
-    {
+    } else {
       flyWheelButtonReleased = true;
     }
 
-    //flywheel speed control
-    if(Controller1.ButtonR2.pressing() || Controller1.ButtonL2.pressing())
-    {
-      if(flywheelSpeedButtonReleased)
-      {
-        if(Controller1.ButtonR2.pressing())
-        {
+    // flywheel speed control
+    if (Controller1.ButtonR2.pressing() || Controller1.ButtonL2.pressing()) {
+      if (flywheelSpeedButtonReleased) {
+        if (Controller1.ButtonR2.pressing()) {
           increaseSpeed();
-        }
-        else if(Controller1.ButtonL2.pressing())
-        {
+        } else if (Controller1.ButtonL2.pressing()) {
           decreaseSpeed();
         }
       }
       flywheelSpeedButtonReleased = false;
-    }
-    else
-    {
+    } else {
       flywheelSpeedButtonReleased = true;
     }
-      
+
     // intake control
     // make sure we dont pick up too many discs
-    if (Controller1.ButtonY.pressing() && !intakeSwitch.pressing()) 
-    {
+    if (Controller1.ButtonY.pressing() && !intakeSwitch.pressing()) {
       intake.spin(reverse);
-    }
-    else if(Controller1.ButtonRight.pressing())
-    {
+    } else if (Controller1.ButtonRight.pressing()) {
       intake.spin(fwd);
-    }
-    else {
+    } else {
       intake.stop(coast);
     }
 
-    //roller control
-    if (Controller1.ButtonB.pressing()) 
-    {
+    // roller control
+    if (Controller1.ButtonB.pressing()) {
       rollerWheel.spin(reverse);
-    }
-    else {
+    } else {
       rollerWheel.stop(coast);
     }
 
@@ -225,6 +201,13 @@ void usercontrol(void) {
       piston.open();
     } else {
       piston.close();
+    }
+
+    // rope launcher
+    if (Controller1.ButtonA.pressing() && Controller1.ButtonLeft.pressing()) {
+      ropeLauncher.open();
+    } else {
+      // ropeLauncher.close();
     }
 
     Brain.Screen.clearLine(0);
