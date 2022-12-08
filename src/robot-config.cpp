@@ -18,9 +18,7 @@ motor rollerWheel = motor(PORT8, RED, false);
 pneumatics piston = pneumatics(Brain.ThreeWirePort.A);
 pneumatics ropeLauncher = pneumatics(Brain.ThreeWirePort.E);
 bumper intakeSwitch = bumper(Brain.ThreeWirePort.B);
-encoder flywheelEncoder = encoder(Brain.ThreeWirePort.C);
 
-optical colorSensor = optical(PORT11, false);
 // VEXcode generated functions
 
 

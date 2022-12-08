@@ -17,9 +17,6 @@ extern pneumatics piston;
 extern pneumatics ropeLauncher;
 
 extern bumper intakeSwitch;
-extern encoder flywheelEncoder;
-
-extern optical colorSensor;
 
  /* Used to initialize code/tasks/devices added using tools in VEXcode Text.
  * 

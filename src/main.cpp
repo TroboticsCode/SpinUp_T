@@ -21,6 +21,7 @@ using namespace vex;
 
 // A global instance of competition
 competition Competition;
+void updateSpeedDisplay(void);
 
 // define your global instances of motors and other devices here
 uint32_t pressTime = 0;
@@ -32,9 +33,13 @@ bool updateScreen = true;
 // auton starting spot 80%
 // full diagnol 95%
 
-uint8_t flywheelSpeeds[] = {55, 60, 65, 70, 75, 80, 85, 90, 95, 100};
-uint8_t speedSelector = 7;
-const uint8_t numSpeed = 10;
+//uint8_t flywheelSpeeds[] = {45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100};
+uint16_t flywheelSpeeds[] = {500, 600, 700, 800, 900, 1000, 1500, 2000, 2500, 2750, 3000, 3200};
+
+uint8_t speedSelector = 2;
+const uint8_t numSpeed = 12;
+
+bool flyWheelState = false;
 
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
@@ -81,6 +86,8 @@ void autonomous(void) {
   default:
     break;
   }
+
+  updateSpeedDisplay();
 }
 
 /*---------------------------------------------------------------------------*/
@@ -92,6 +99,18 @@ void autonomous(void) {
 /*                                                                           */
 /*  You must modify the code to add your own robot specific commands here.   */
 /*---------------------------------------------------------------------------*/
+void updateSpeedDisplay(void) {
+  Controller1.Screen.setCursor(1, 1);
+  Controller1.Screen.clearLine();
+  Controller1.Screen.setCursor(1, 1);
+
+  Controller1.Screen.print("speed: %d", flywheelSpeeds[speedSelector]);
+
+  Controller1.Screen.setCursor(1, 12);
+  Controller1.Screen.print("Enabled: ");
+  Controller1.Screen.print(flyWheelState);
+}
+
 void increaseSpeed(void) {
   if (Brain.Timer.system() - pressTime > 200) {
     if (speedSelector < numSpeed - 1) {
@@ -100,11 +119,7 @@ void increaseSpeed(void) {
       flywheelBack.setVelocity(-1 * flywheelSpeeds[speedSelector], pct);
       flywheelFront.setVelocity(-1 * flywheelSpeeds[speedSelector], pct);
 
-      Controller1.Screen.setCursor(1, 1);
-      Controller1.Screen.clearLine();
-      Controller1.Screen.setCursor(1, 1);
-
-      Controller1.Screen.print("speed: %d", flywheelSpeeds[speedSelector]);
+      updateSpeedDisplay();
     }
     pressTime = Brain.Timer.system();
   }
@@ -117,35 +132,51 @@ void decreaseSpeed(void) {
     flywheelBack.setVelocity(-1 * flywheelSpeeds[speedSelector], pct);
     flywheelFront.setVelocity(-1 * flywheelSpeeds[speedSelector], pct);
 
-    Controller1.Screen.setCursor(1, 1);
-    Controller1.Screen.clearLine();
-    Controller1.Screen.setCursor(1, 1);
-
-    Controller1.Screen.print("speed: %d", flywheelSpeeds[speedSelector]);
+    updateSpeedDisplay();
   }
 }
+
 void usercontrol(void) {
 
-  flywheelBack.setVelocity(-1 * flywheelSpeeds[speedSelector], pct);
-  flywheelFront.setVelocity(-1 * flywheelSpeeds[speedSelector], pct);
-  intake.setVelocity(100, pct);
-
   bool flyWheelButtonReleased = false;
-  bool flyWheelState = false;
 
   bool flywheelSpeedButtonReleased = false;
+  bool rumbleDone = true;
+
+  double maxCurrent = 0;
+
+  pidStruct_t flyWheelPID;
+  pidInit(&flyWheelPID, 0.09, 0.00001, 0, 15, 30);
+
+  intake.setVelocity(100, pct);
 
   ropeLauncher.close();
-
-  Controller1.Screen.setCursor(1, 1);
-  Controller1.Screen.clearLine();
-  Controller1.Screen.setCursor(1, 1);
-
-  Controller1.Screen.print("speed: %d", flywheelSpeeds[speedSelector]);
+  
 
   while (1) {
 
     userDrive();
+
+    if (flyWheelState) {
+      double motorVoltage = pidCalculate(&flyWheelPID, -1.0f * flywheelSpeeds[speedSelector],flywheelBack.velocity(rpm) * 7);
+      motorVoltage = motorVoltage * 12 / 100.0f;
+      if(motorVoltage > 0)
+        motorVoltage = 0;
+
+      printPIDValues(&flyWheelPID);
+
+      flywheelFront.spin(forward, motorVoltage, voltageUnits::volt);
+      flywheelBack.spin(forward, motorVoltage, voltageUnits::volt);
+
+      if (flywheelFront.current() > maxCurrent) // update max current val
+        maxCurrent = flywheelFront.current();
+
+      //rumbleDone = false;
+
+    } else {
+      flywheelFront.stop(coast);
+      flywheelBack.stop(coast);
+    }
 
     // flywheel control - button toggles on or off
     if (Controller1.ButtonL1.pressing()) {
@@ -153,13 +184,7 @@ void usercontrol(void) {
         flyWheelButtonReleased = false;
         flyWheelState = !flyWheelState;
 
-        if (flyWheelState) {
-          flywheelFront.spin(forward);
-          flywheelBack.spin(forward);
-        } else {
-          flywheelFront.stop(coast);
-          flywheelBack.stop(coast);
-        }
+        updateSpeedDisplay();       
       }
     } else {
       flyWheelButtonReleased = true;
@@ -175,8 +200,15 @@ void usercontrol(void) {
         }
       }
       flywheelSpeedButtonReleased = false;
+      rumbleDone = false;
     } else {
       flywheelSpeedButtonReleased = true;
+    }
+
+    // should only trigger once the motor current has rolled off
+    if (!rumbleDone && flywheelFront.current() < maxCurrent / 4) {
+      Controller1.rumble("---");
+      rumbleDone = true;
     }
 
     // intake control
@@ -191,6 +223,8 @@ void usercontrol(void) {
 
     // roller control
     if (Controller1.ButtonB.pressing()) {
+      rollerWheel.spin(forward);
+    } else if (Controller1.ButtonDown.pressing()) {
       rollerWheel.spin(reverse);
     } else {
       rollerWheel.stop(coast);
@@ -207,13 +241,13 @@ void usercontrol(void) {
     if (Controller1.ButtonA.pressing() && Controller1.ButtonLeft.pressing()) {
       ropeLauncher.open();
     } else {
-      // ropeLauncher.close();
+      ropeLauncher.close();
     }
 
-    Brain.Screen.clearLine(0);
-    Brain.Screen.setCursor(1, 1);
+    Brain.Screen.clearLine(7);
+    Brain.Screen.setCursor(7, 1);
     Brain.Screen.print("Wheel Speed: ");
-    Brain.Screen.print(flywheelEncoder.velocity(rpm));
+    Brain.Screen.print(flywheelBack.velocity(rpm) * 7);
     Brain.Screen.print(" RPM");
     wait(20, msec); // Sleep the task for a short amount of time to
   }

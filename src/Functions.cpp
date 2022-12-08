@@ -32,7 +32,7 @@ void enableIntake(void)
 
 void enableRollerWheel(void)
 {
-  rollerWheel.spin(reverse);
+  rollerWheel.spin(forward);
 }
 
 void disableIntake(void)
