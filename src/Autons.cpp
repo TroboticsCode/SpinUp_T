@@ -6,6 +6,8 @@
 // Put your auton routines in here
 
 void Auton1() {
+  autoAimColor = SIGRED;
+  
   setRotGains(.05, 0.00000000001, 0, 20, 10); //update PID gains to tune robot
   setLinGains(200, 0, 0, 20, 10);
  
@@ -65,6 +67,9 @@ void Auton1() {
 }
 
 void Auton2() {
+  autoAimColor = SIGRED;
+
+
   setRotGains(.05, 0.00000000001, 0, 20, 10); //update PID gains to tune robot
   setLinGains(200, 0, 0, 20, 10);
  
@@ -160,6 +165,8 @@ void skills() {
 }
 
 void Auton3(){ 
+  autoAimColor = SIGBLUE;
+
   //robot goes to first roller
   moveLinear(-5, 90, 3000);
 //robot spins first roller
@@ -180,5 +187,11 @@ void Auton3(){
   enableRollerWheel();
   wait(1000, msec);
   disableRollerWheel();
+}
+
+void Auton4()
+{
+  autoAimColor = SIGBLUE;
+
 }
 

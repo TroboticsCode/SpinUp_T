@@ -30,32 +30,31 @@ void cycle_autons(void)
 {
     if (state == 0)
     {
-        state = AutonR;
-        strcpy(state_name, "Auton_1");
+        state = AutonRedNear;
+        strcpy(state_name, "Auton Red Near");
     }
-    else if (state == AutonR)
+    else if (state == AutonRedNear)
     {
-         state =   AutonB;
-         strcpy(state_name, "Auton_2");
+         state =   AutonRedFar;
+         strcpy(state_name, "Auton Red Far");
     }
-    
-    else if (state == AutonB)
+    else if (state == AutonRedFar)
     {
-        state = AutonY;
-        strcpy(state_name, "AutonY");
+        state = AutonBlueNear;
+        strcpy(state_name, "Auton Blue Near");
     }
-    else if (state == AutonY)
+    else if (state == AutonBlueFar)
+    {
+        state = SKILLS;
+        strcpy(state_name, "Auton Blue Far");
+    }
+    else if (state == AutonBlueFar)
     {
         state = SKILLS;
         strcpy(state_name, "Skills");
     }
-    else if (state == SKILLS)
-    {
-        state = SKILLS120;
-        strcpy(state_name, "Skills 120");
-    }
 
-    else if (state == SKILLS120)
+    else if (state == SKILLS)
     {
         state = NONE;
         strcpy(state_name, "NONE");

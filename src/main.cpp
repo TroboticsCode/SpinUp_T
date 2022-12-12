@@ -40,7 +40,7 @@ uint8_t speedSelector = 2;
 const uint8_t numSpeed = 12;
 
 bool flyWheelState = false;
-
+int autoAimColor = SIGRED;
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
 /*                                                                           */
@@ -65,21 +65,23 @@ void autonomous(void) {
   case NONE:
     break;
 
-  case AutonR:
+  case AutonRedNear:
     Auton1();
     break;
 
-  case AutonB:
+  case AutonRedFar:
     Auton2();
     break;
-  case AutonY:
+  case AutonBlueNear:
     Auton3();
     break;
 
+  case AutonBlueFar:
+    Auton4();
+    break;
+  
   case SKILLS:
     skills();
-    break;
-  case SKILLS120:
     break;
 
   // Default = NO autonomous
@@ -132,7 +134,12 @@ void decreaseSpeed(void) {
     flywheelBack.setVelocity(-1 * flywheelSpeeds[speedSelector], pct);
     flywheelFront.setVelocity(-1 * flywheelSpeeds[speedSelector], pct);
 
-    updateSpeedDisplay();
+    
+    Controller1.Screen.setCursor(1, 1);
+    Controller1.Screen.clearLine();
+    Controller1.Screen.setCursor(1, 1);
+    Controller1.Screen.print("speed: %d", flywheelSpeeds[speedSelector]);
+
   }
 }
 
@@ -147,7 +154,9 @@ void usercontrol(void) {
 
   pidStruct_t flyWheelPID;
   pidInit(&flyWheelPID, 0.09, 0.00001, 0, 15, 30);
-
+  
+  setLinGains(50, 0.007, 0, 40, 30);
+  setRotGains(50, 0.007, 0, 40, 30);
   intake.setVelocity(100, pct);
 
   ropeLauncher.close();
@@ -242,6 +251,11 @@ void usercontrol(void) {
       ropeLauncher.open();
     } else {
       ropeLauncher.close();
+    }
+
+    if(Controller1.ButtonA.pressing())
+    {
+      autoAim(autoAimColor);
     }
 
     Brain.Screen.clearLine(7);
