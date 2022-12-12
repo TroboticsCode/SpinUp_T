@@ -114,31 +114,26 @@ void updateSpeedDisplay(void) {
 }
 
 void increaseSpeed(void) {
-  if (Brain.Timer.system() - pressTime > 200) {
-    if (speedSelector < numSpeed - 1) {
+  if (speedSelector < numSpeed - 1) {
       speedSelector++;
 
-      flywheelBack.setVelocity(-1 * flywheelSpeeds[speedSelector], pct);
-      flywheelFront.setVelocity(-1 * flywheelSpeeds[speedSelector], pct);
+      //flywheelBack.setVelocity(-1 * flywheelSpeeds[speedSelector], pct);
+      //flywheelFront.setVelocity(-1 * flywheelSpeeds[speedSelector], pct);
 
       updateSpeedDisplay();
     }
-    pressTime = Brain.Timer.system();
-  }
 }
+
 
 void decreaseSpeed(void) {
   if (speedSelector > 0) {
     speedSelector--;
 
-    flywheelBack.setVelocity(-1 * flywheelSpeeds[speedSelector], pct);
-    flywheelFront.setVelocity(-1 * flywheelSpeeds[speedSelector], pct);
+    //flywheelBack.setVelocity(-1 * flywheelSpeeds[speedSelector], pct);
+    //flywheelFront.setVelocity(-1 * flywheelSpeeds[speedSelector], pct);
 
     
-    Controller1.Screen.setCursor(1, 1);
-    Controller1.Screen.clearLine();
-    Controller1.Screen.setCursor(1, 1);
-    Controller1.Screen.print("speed: %d", flywheelSpeeds[speedSelector]);
+    updateSpeedDisplay();
 
   }
 }
@@ -153,7 +148,7 @@ void usercontrol(void) {
   double maxCurrent = 0;
 
   pidStruct_t flyWheelPID;
-  pidInit(&flyWheelPID, 0.09, 0.00001, 0, 15, 30);
+  pidInit(&flyWheelPID, 0.09, 0.00003, 0, 10, 20);
   
   setLinGains(50, 0.007, 0, 40, 30);
   setRotGains(50, 0.007, 0, 40, 30);
@@ -253,7 +248,7 @@ void usercontrol(void) {
       ropeLauncher.close();
     }
 
-    if(Controller1.ButtonA.pressing())
+    if(Controller1.ButtonX.pressing())
     {
       autoAim(autoAimColor);
     }

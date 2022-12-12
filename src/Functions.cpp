@@ -42,6 +42,7 @@ void fireDisc(void) {
 void disableRollerWheel(void) { rollerWheel.stop(); }
 
 void autoAim(int color) {
+  int motorPower = 15;
   Brain.Screen.setCursor(1, 1);
   //Brain.Screen.print("Starting tower center routine");
 
@@ -49,36 +50,33 @@ void autoAim(int color) {
     Vision1.takeSnapshot(REDSIG);
   else if (color == SIGBLUE)
     Vision1.takeSnapshot(BLUESIG);
-  else if (color == SIGGREEN)
-    Vision1.takeSnapshot(GREENSIG);
 
   int objectCenter = Vision1.largestObject.centerX;
 
   //while ((objectCenter > CENTER_X + 10) || (objectCenter < CENTER_X - 10)) {
-    if (color == SIGRED)
-      Vision1.takeSnapshot(REDSIG);
-    else if (color == SIGBLUE)
-      Vision1.takeSnapshot(BLUESIG);
-    else if (color == SIGGREEN)
-      Vision1.takeSnapshot(GREENSIG);
+    // if (color == SIGRED)
+    //   Vision1.takeSnapshot(REDSIG);
+    // else if (color == SIGBLUE)
+    //   Vision1.takeSnapshot(BLUESIG);
 
-    objectCenter = Vision1.largestObject.centerX;
+
+    // objectCenter = Vision1.largestObject.centerX;
     Brain.Screen.setCursor(2, 2);
     Brain.Screen.clearLine();
     Brain.Screen.print(objectCenter);
 
     if (objectCenter > CENTER_X + 5) {
       Brain.Screen.print("turn right");
-      BackRight.spin(directionType::rev, 10, velocityUnits::pct);
-      BackLeft.spin(directionType::fwd, 10, velocityUnits::pct);
-      FrontRight.spin(directionType::rev, 10, velocityUnits::pct);
-      FrontLeft.spin(directionType::fwd, 10, velocityUnits::pct);
+      BackRight.spin(directionType::rev, motorPower, velocityUnits::pct);
+      BackLeft.spin(directionType::fwd, motorPower, velocityUnits::pct);
+      FrontRight.spin(directionType::rev, motorPower, velocityUnits::pct);
+      FrontLeft.spin(directionType::fwd, motorPower, velocityUnits::pct);
     } else if (objectCenter < CENTER_X - 5) {
       Brain.Screen.print("turn left ");
-      BackRight.spin(directionType::fwd, 10, velocityUnits::pct);
-      BackLeft.spin(directionType::rev, 10, velocityUnits::pct);
-      FrontRight.spin(directionType::fwd, 10, velocityUnits::pct);
-      FrontLeft.spin(directionType::rev, 10, velocityUnits::pct);
+      BackRight.spin(directionType::fwd, motorPower, velocityUnits::pct);
+      BackLeft.spin(directionType::rev, motorPower, velocityUnits::pct);
+      FrontRight.spin(directionType::fwd, motorPower, velocityUnits::pct);
+      FrontLeft.spin(directionType::rev, motorPower, velocityUnits::pct);
     } else {
       Brain.Screen.print("Dont move");
       Controller1.Screen.clearScreen();
