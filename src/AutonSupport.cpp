@@ -43,9 +43,9 @@ void cycle_autons(void)
         state = AutonBlueNear;
         strcpy(state_name, "Auton Blue Near");
     }
-    else if (state == AutonBlueFar)
+    else if (state == AutonBlueNear)
     {
-        state = SKILLS;
+        state = AutonBlueFar;
         strcpy(state_name, "Auton Blue Far");
     }
     else if (state == AutonBlueFar)

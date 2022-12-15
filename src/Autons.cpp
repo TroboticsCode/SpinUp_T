@@ -27,8 +27,8 @@ void Auton1() {
 
   //moveLinear(float distance, int velocity, uint32_t timeOut);
   // step 1:
-  flywheelBack.setVelocity(-63, pct);
-  flywheelFront.setVelocity(-63, pct);
+  flywheelBack.setVelocity(-75, pct);
+  flywheelFront.setVelocity(-75, pct);
   
   enableFlywheel();
   //step 2:
@@ -38,8 +38,8 @@ void Auton1() {
   //step 3:
   fireDisc();
   //step 4:
-  flywheelBack.setVelocity(-65, pct);
-  flywheelFront.setVelocity(-65, pct);
+  flywheelBack.setVelocity(-78, pct);
+  flywheelFront.setVelocity(-78, pct);
   //waitUntil(flywheelEncoder.velocity(rpm) > 2500);
   wait(2000,msec);
   //step 5:
@@ -48,7 +48,7 @@ void Auton1() {
   disableFlywheel();
 
   //step 7: align with color roller
-  //moveRotate(20, 100, 1000);
+  moveRotate(5, 100, 1000);
   moveLinear(-10, 100, 1000);
   //40, -5; 45, -20
   //moveRotate(-35, 100, 1000);

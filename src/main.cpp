@@ -34,10 +34,10 @@ bool updateScreen = true;
 // full diagnol 95%
 
 //uint8_t flywheelSpeeds[] = {45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100};
-uint16_t flywheelSpeeds[] = {500, 600, 700, 800, 900, 1000, 1500, 2000, 2500, 2750, 3000, 3200};
+uint16_t flywheelSpeeds[] = {1500, 2000, 2100, 2200, 2300, 2400, 2500, 2750, 3000, 3200};
 
-uint8_t speedSelector = 2;
-const uint8_t numSpeed = 12;
+uint8_t speedSelector = 4;
+const uint8_t numSpeed = 10;
 
 bool flyWheelState = false;
 int autoAimColor = SIGRED;
@@ -117,7 +117,7 @@ void increaseSpeed(void) {
   if (speedSelector < numSpeed - 1) {
       speedSelector++;
 
-      //flywheelBack.setVelocity(-1 * flywheelSpeeds[speedSelector], pct);
+      flywheelBack.setVelocity(-1 * flywheelSpeeds[speedSelector], pct);
       //flywheelFront.setVelocity(-1 * flywheelSpeeds[speedSelector], pct);
 
       updateSpeedDisplay();
@@ -129,12 +129,10 @@ void decreaseSpeed(void) {
   if (speedSelector > 0) {
     speedSelector--;
 
-    //flywheelBack.setVelocity(-1 * flywheelSpeeds[speedSelector], pct);
+    flywheelBack.setVelocity(-1 * flywheelSpeeds[speedSelector], pct);
     //flywheelFront.setVelocity(-1 * flywheelSpeeds[speedSelector], pct);
 
-    
     updateSpeedDisplay();
-
   }
 }
 
@@ -211,7 +209,7 @@ void usercontrol(void) {
 
     // should only trigger once the motor current has rolled off
     if (!rumbleDone && flywheelFront.current() < maxCurrent / 4) {
-      Controller1.rumble("---");
+      //Controller1.rumble("---");
       rumbleDone = true;
     }
 

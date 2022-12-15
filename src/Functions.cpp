@@ -65,13 +65,13 @@ void autoAim(int color) {
     Brain.Screen.clearLine();
     Brain.Screen.print(objectCenter);
 
-    if (objectCenter > CENTER_X + 5) {
+    if (objectCenter > CENTER_X + 8) {
       Brain.Screen.print("turn right");
       BackRight.spin(directionType::rev, motorPower, velocityUnits::pct);
       BackLeft.spin(directionType::fwd, motorPower, velocityUnits::pct);
       FrontRight.spin(directionType::rev, motorPower, velocityUnits::pct);
       FrontLeft.spin(directionType::fwd, motorPower, velocityUnits::pct);
-    } else if (objectCenter < CENTER_X - 5) {
+    } else if (objectCenter < CENTER_X - 2) {
       Brain.Screen.print("turn left ");
       BackRight.spin(directionType::fwd, motorPower, velocityUnits::pct);
       BackLeft.spin(directionType::rev, motorPower, velocityUnits::pct);
@@ -79,8 +79,8 @@ void autoAim(int color) {
       FrontLeft.spin(directionType::rev, motorPower, velocityUnits::pct);
     } else {
       Brain.Screen.print("Dont move");
-      Controller1.Screen.clearScreen();
-      Controller1.Screen.print("Auto Aim Done");
+      //Controller1.Screen.clearScreen();
+      //Controller1.Screen.print("Auto Aim Done");
       BackRight.stop();
       BackLeft.stop();
       FrontRight.stop();
