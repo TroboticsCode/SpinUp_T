@@ -33,11 +33,12 @@ bool updateScreen = true;
 // auton starting spot 80%
 // full diagnol 95%
 
+pidStruct_t flyWheelPID;
 //uint8_t flywheelSpeeds[] = {45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100};
-uint16_t flywheelSpeeds[] = {1500, 2000, 2100, 2200, 2300, 2400, 2500, 2750, 3000, 3200};
+uint16_t flywheelSpeeds[] = {1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000, 2100, 2200, 2300, 2400, 2500, 2750, 3000, 3200};
 
-uint8_t speedSelector = 4;
-const uint8_t numSpeed = 10;
+uint8_t speedSelector = 1;
+const uint8_t numSpeed = 18;
 
 bool flyWheelState = false;
 int autoAimColor = SIGRED;
@@ -54,6 +55,8 @@ int autoAimColor = SIGRED;
 void pre_auton(void) {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
+
+  pidInit(&flyWheelPID, 0.09, 0.00003, 0, 10, 20);
 
   Controller1.ButtonUp.pressed(cycle_autons);
   Brain.Screen.pressed(cycle_autons);
@@ -144,9 +147,6 @@ void usercontrol(void) {
   bool rumbleDone = true;
 
   double maxCurrent = 0;
-
-  pidStruct_t flyWheelPID;
-  pidInit(&flyWheelPID, 0.09, 0.00003, 0, 10, 20);
   
   setLinGains(50, 0.007, 0, 40, 30);
   setRotGains(50, 0.007, 0, 40, 30);

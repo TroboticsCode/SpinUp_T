@@ -128,7 +128,7 @@ void userDrive(void);
 
 #ifdef GYRO
   extern inertial myGyro;
-  #define GYRO_PORT PORT9
+  #define GYRO_PORT PORT10
 #endif
 
 #endif

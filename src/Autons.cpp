@@ -27,8 +27,8 @@ void Auton1() {
 
   //moveLinear(float distance, int velocity, uint32_t timeOut);
   // step 1:
-  flywheelBack.setVelocity(-75, pct);
-  flywheelFront.setVelocity(-75, pct);
+  flywheelBack.setVelocity(-70, pct);
+  flywheelFront.setVelocity(-70, pct);
   
   enableFlywheel();
   //step 2:
@@ -38,8 +38,8 @@ void Auton1() {
   //step 3:
   fireDisc();
   //step 4:
-  flywheelBack.setVelocity(-78, pct);
-  flywheelFront.setVelocity(-78, pct);
+  flywheelBack.setVelocity(-75, pct);
+  flywheelFront.setVelocity(-75, pct);
   //waitUntil(flywheelEncoder.velocity(rpm) > 2500);
   wait(2000,msec);
   //step 5:
@@ -189,9 +189,63 @@ void Auton3(){
   disableRollerWheel();
 }
 
-void Auton4()
+/*void Auton4()
 {
   autoAimColor = SIGBLUE;
 
-}
+}*/
 
+void Auton4(){
+  autoAimColor = SIGRED;
+  
+  setRotGains(.0325, 0.0000001, 0, 20, 10); //update PID gains to tune robot
+  setLinGains(150, 0.07, 0, 20, 10);
+ 
+
+  flywheelBack.setVelocity(-70, pct);
+  flywheelFront.setVelocity(-70, pct);
+  
+  enableFlywheel();
+  
+  
+  wait(2000, msec);
+  
+  fireDisc();
+ 
+  flywheelBack.setVelocity(-75, pct);
+  flywheelFront.setVelocity(-75, pct);
+  
+  wait(2000,msec);
+  
+  fireDisc();
+
+  disableFlywheel();
+
+  moveRotate(10, 100, 2000);
+  moveLinear(-8, 100, 1000);
+
+  enableRollerWheel();
+  uint32_t currTime = Brain.Timer.system();
+  while((Brain.Timer.system() - currTime < 500));
+  disableRollerWheel();
+
+  //move away from roller, then drive to other roller
+  moveLinear(5, 100, 1000);
+  moveRotate(-135, 100, 3000);
+  moveLinear(-120, 100, 3000);
+  moveStop(hold);
+
+  //rotate a bit further so we stay on our side of the field
+  moveRotate(45, 100, 1000);
+  moveStop(hold);
+
+  //turn around to face the roller
+  moveLinear(-9, 100, 1000); //back up to the roller
+  moveStop(hold);
+
+  //enable roller motor
+  enableRollerWheel();
+  currTime = Brain.Timer.system();
+  while((Brain.Timer.system() - currTime < 500));
+  disableRollerWheel();
+}

@@ -10,6 +10,7 @@
 //always include vex.h because it has all the robot setup declarations
 //as well as the API for the code.
 #include "vex.h"
+#include "PID.h"
 
 #define SIGRED   1
 #define SIGBLUE  2
@@ -29,5 +30,7 @@ void fireDisc(void);
 void autoAim(int color);
 
 extern int autoAimColor;
+extern pidStruct_t flyWheelPID;
+
 
 #endif

@@ -220,8 +220,8 @@ void moveRotate(int16_t degrees, int velocity, uint32_t timeOut)
 
 #if defined(PID) 
   #ifdef GYRO
-    //myGyro.calibrate();
-    //while(myGyro.isCalibrating());
+    myGyro.calibrate();
+    while(myGyro.isCalibrating());
     myGyro.resetRotation();
   #endif
 
