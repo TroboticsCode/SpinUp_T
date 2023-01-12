@@ -15,6 +15,7 @@
 #define AutonBlueFar  4
 #define SKILLS 5
 
+
 extern int state;
 
 //auton support function prototypes
