@@ -56,7 +56,7 @@ void pre_auton(void) {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
 
-  pidInit(&flyWheelPID, 0.09, 0.00003, 0, 10, 20);
+  pidInit(&flyWheelPID, 0.09, 0.00001, 0, 10, 20);
 
   Controller1.ButtonUp.pressed(cycle_autons);
   Brain.Screen.pressed(cycle_autons);
