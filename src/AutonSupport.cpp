@@ -50,10 +50,31 @@ void cycle_autons(void)
     }
     else if (state == AutonBlueFar)
     {
+        state = AutonRedNearShort;
+        strcpy(state_name, "Auton Red Near Short");
+    }
+    
+    //shorts
+    else if (state == AutonRedNearShort)
+    {
+         state =   AutonRedFarShort;
+         strcpy(state_name, "Auton Red Far Short");
+    }
+    else if (state == AutonRedFarShort)
+    {
+        state = AutonBlueNearShort;
+        strcpy(state_name, "Auton Blue Near Short");
+    }
+    else if (state == AutonBlueNearShort)
+    {
+        state = AutonBlueFarShort;
+        strcpy(state_name, "Auton Blue Far Short");
+    }
+    else if (state == AutonBlueFarShort)
+    {
         state = SKILLS;
         strcpy(state_name, "Skills");
     }
-
     else if (state == SKILLS)
     {
         state = NONE;

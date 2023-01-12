@@ -43,6 +43,7 @@ void Auton1() {
   moveLinear(5, 100, 1000);
   moveRotate(50, 100, 3000);
   moveLinear(80, 100, 3000);
+  moveStop(hold);
 
 
   //rotate a bit further so we stay on our side of the field
@@ -284,4 +285,24 @@ void Auton4(){
   currTime = Brain.Timer.system();
   while((Brain.Timer.system() - currTime < 500));
   disableRollerWheel();
+}
+
+void Auton5()
+{
+
+}
+
+void Auton6()
+{
+
+}
+
+void Auton7()
+{
+
+}
+
+void Auton8()
+{
+
 }

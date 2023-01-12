@@ -35,10 +35,10 @@ bool updateScreen = true;
 
 pidStruct_t flyWheelPID;
 //uint8_t flywheelSpeeds[] = {45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100};
-uint16_t flywheelSpeeds[] = {1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000, 2100, 2200, 2300, 2400, 2500, 2750, 3000, 3200};
+uint16_t flywheelSpeeds[] = {1000, 1200, 1400, 1500, 1600, 1700, 1800, 1900, 2000, 2100, 2200, 2300, 2400, 2500, 2750, 3000, 3200};
 
 uint8_t speedSelector = 1;
-const uint8_t numSpeed = 18;
+const uint8_t numSpeed = 17;
 
 bool flyWheelState = false;
 int autoAimColor = SIGRED;
@@ -75,12 +75,29 @@ void autonomous(void) {
   case AutonRedFar:
     Auton2();
     break;
+    
   case AutonBlueNear:
     Auton3();
     break;
 
   case AutonBlueFar:
     Auton4();
+    break;
+
+  case AutonRedNearShort:
+    Auton5();
+    break;
+
+  case AutonRedFarShort:
+    Auton6();
+    break;
+    
+  case AutonBlueNearShort:
+    Auton7();
+    break;
+
+  case AutonBlueFarShort:
+    Auton8();
     break;
   
   case SKILLS:
@@ -119,10 +136,6 @@ void updateSpeedDisplay(void) {
 void increaseSpeed(void) {
   if (speedSelector < numSpeed - 1) {
       speedSelector++;
-
-      flywheelBack.setVelocity(-1 * flywheelSpeeds[speedSelector], pct);
-      //flywheelFront.setVelocity(-1 * flywheelSpeeds[speedSelector], pct);
-
       updateSpeedDisplay();
     }
 }
@@ -131,10 +144,6 @@ void increaseSpeed(void) {
 void decreaseSpeed(void) {
   if (speedSelector > 0) {
     speedSelector--;
-
-    flywheelBack.setVelocity(-1 * flywheelSpeeds[speedSelector], pct);
-    //flywheelFront.setVelocity(-1 * flywheelSpeeds[speedSelector], pct);
-
     updateSpeedDisplay();
   }
 }
