@@ -6,6 +6,7 @@
 // Put your auton routines in here
 
 void Auton1() {
+  //RED NEAR
   autoAimColor = SIGRED;
   
   setRotGains(.0325, 0.0000001, 0, 20, 10); //update PID gains to tune robot
@@ -68,6 +69,7 @@ void Auton1() {
 }
 
 void Auton2() {
+  //RED FAR
   autoAimColor = SIGRED;
 
 
@@ -129,21 +131,25 @@ void Auton2() {
 }
 
 void skills() {
+  //SKILLS (RED SIDE!!!)
+  autoAimColor = SIGRED;
+
   setRotGains(.05, 0.00000000001, 0, 20, 10); //update PID gains to tune robot
   setLinGains(200, 0, 0, 20, 10);
 
+  moveLinear(-2, 100, 1000);
+
   enableRollerWheel();
-  uint32_t currTime = Brain.Timer.system();
-  while((Brain.Timer.system() - currTime < 3000));
+  wait (500, msec);
   disableRollerWheel();
 
-  moveLinear(29, 80, 30000);
+  moveLinear(22, 80, 30000);
   moveRotate(90, 80, 3000);
-  moveLinear(35, 80, 30000);
+  moveLinear(-35, 80, 30000);
 
   enableRollerWheel();
 
-  wait(3, seconds);
+  wait (500, msec);
 
   disableRollerWheel();
 
@@ -152,30 +158,12 @@ void skills() {
 
   enableIntake();
 
-  moveLinear(20, 80, 3000);
+  moveRotate(-120, 80, 3000);
 
-  enableFlywheel();
-  //waitUntil(flywheelEncoder.velocity(rpm) > 3000);
-  fireDisc();
-  enableFlywheel();
-  //waitUntil(flywheelEncoder.velocity(rpm) > 3000);
-  fireDisc();
-  enableFlywheel();
-  //waitUntil(flywheelEncoder.velocity(rpm) > 3000);
-  fireDisc();
+  autoAim(autoAimColor);  
 
-  ropeLauncher.open();
-}
-
-void Auton3(){ 
-  autoAimColor = SIGBLUE;
-  
-  setRotGains(.0325, 0.0000001, 0, 20, 10); //update PID gains to tune robot
-  setLinGains(150, 0.07, 0, 20, 10);
- 
-
-  flywheelBack.setVelocity(-100, pct);
-  flywheelFront.setVelocity(-100, pct);
+  flywheelBack.setVelocity(-40, pct);
+  flywheelFront.setVelocity(-40, pct);
   
   enableFlywheel();
   
@@ -184,8 +172,40 @@ void Auton3(){
   
   fireDisc();
  
-  flywheelBack.setVelocity(-100, pct);
-  flywheelFront.setVelocity(-100, pct);
+  flywheelBack.setVelocity(-40, pct);
+  flywheelFront.setVelocity(-40, pct);
+  
+  wait(1000,msec);
+  
+  fireDisc();
+
+  disableFlywheel();
+
+  moveRotate(-100, 80, 3000);
+
+  ropeLauncher.open();
+}
+
+void Auton3(){ 
+  //BLUE NEAR
+  autoAimColor = SIGBLUE;
+  
+  setRotGains(.0325, 0.0000001, 0, 20, 10); //update PID gains to tune robot
+  setLinGains(150, 0.07, 0, 20, 10);
+ 
+
+  flywheelBack.setVelocity(-62, pct);
+  flywheelFront.setVelocity(-62, pct);
+  
+  enableFlywheel();
+  
+  
+  wait(2000, msec);
+  
+  fireDisc();
+ 
+  flywheelBack.setVelocity(-68, pct);
+  flywheelFront.setVelocity(-68, pct);
   
   wait(1000,msec);
   
@@ -204,18 +224,23 @@ void Auton3(){
   //move away from roller, then drive to other roller
   moveLinear(5, 100, 1000);
   moveRotate(50, 100, 3000);
-  moveLinear(125, 100, 3000);
+  moveLinear(80, 100, 3000);
   moveStop(hold);
 
+
   //rotate a bit further so we stay on our side of the field
-  moveRotate(160, 100, 1000);
+  moveRotate(135, 100, 1000);
   moveStop(hold);
 
   //turn around to face the roller
-  moveLinear(-8, 100, 1000); //back up to the roller
+  moveLinear(-5, 100, 1000); //back up to the roller
   moveStop(hold);
-  moveRotate(60, 100, 3000);
-  moveLinear(-12, 100, 3000);
+  moveRotate(23, 100, 3000);
+  moveLinear(-38, 100, 1500);
+  moveRotate(20, 100, 1000);
+  moveLinear(-6, 100, 1000);
+  moveRotate(5, 100, 1000);
+  moveLinear(-2, 100, 1000);
 
   //enable roller motor
   enableRollerWheel();
@@ -231,6 +256,8 @@ void Auton3(){
 }*/
 
 void Auton4(){
+
+  //BLUE FAR
   autoAimColor = SIGBLUE;
   
   setRotGains(.0325, 0.0000001, 0, 20, 10); //update PID gains to tune robot
@@ -289,20 +316,86 @@ void Auton4(){
 
 void Auton5()
 {
+  //RED NEAR SHORT
+  autoAimColor = SIGRED;
+  
+  setRotGains(.0325, 0.0000001, 0, 20, 10); //update PID gains to tune robot
+  setLinGains(150, 0.07, 0, 20, 10);
+ 
 
+  flywheelBack.setVelocity(-62, pct);
+  flywheelFront.setVelocity(-62, pct);
+  
+  enableFlywheel();
+  
+  
+  wait(2000, msec);
+  
+  fireDisc();
+ 
+  flywheelBack.setVelocity(-68, pct);
+  flywheelFront.setVelocity(-68, pct);
+  
+  wait(1000,msec);
+  
+  fireDisc();
+
+  disableFlywheel();
+
+  moveRotate(15, 100, 2000);
+  moveLinear(-8, 100, 1000);
+
+  enableRollerWheel();
+  uint32_t currTime = Brain.Timer.system();
+  while((Brain.Timer.system() - currTime < 500));
+  disableRollerWheel();
 }
 
 void Auton6()
 {
-
+  //RED FAR SHORT
 }
 
 void Auton7()
 {
+  //BLUE NEAR SHORT
+  autoAimColor = SIGBLUE;
+  
+  setRotGains(.0325, 0.0000001, 0, 20, 10); //update PID gains to tune robot
+  setLinGains(150, 0.07, 0, 20, 10);
+ 
+
+  flywheelBack.setVelocity(-62, pct);
+  flywheelFront.setVelocity(-62, pct);
+  
+  enableFlywheel();
+  
+  
+  wait(2000, msec);
+  
+  fireDisc();
+ 
+  flywheelBack.setVelocity(-68, pct);
+  flywheelFront.setVelocity(-68, pct);
+  
+  wait(1000,msec);
+  
+  fireDisc();
+
+  disableFlywheel();
+
+  moveRotate(15, 100, 2000);
+  moveLinear(-8, 100, 1000);
+
+  enableRollerWheel();
+  uint32_t currTime = Brain.Timer.system();
+  while((Brain.Timer.system() - currTime < 500));
+  disableRollerWheel();
 
 }
 
 void Auton8()
 {
+  //BLUE FAR SHORT
 
 }
