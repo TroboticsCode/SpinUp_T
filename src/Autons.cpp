@@ -13,20 +13,20 @@ void Auton1() {
   setLinGains(150, 0.07, 0, 20, 10);
  
 
-  flywheelBack.setVelocity(-62, pct);
-  flywheelFront.setVelocity(-62, pct);
+  flywheelBack.setVelocity(-100, pct);
+  flywheelFront.setVelocity(-100, pct);
   
   enableFlywheel();
   
   
-  wait(2000, msec);
+  wait(3000, msec);
   
   fireDisc();
  
-  flywheelBack.setVelocity(-68, pct);
-  flywheelFront.setVelocity(-68, pct);
+  flywheelBack.setVelocity(-100, pct);
+  flywheelFront.setVelocity(-100, pct);
   
-  wait(1000,msec);
+  wait(2000,msec);
   
   fireDisc();
 
@@ -92,19 +92,19 @@ void Auton2() {
 
   //moveLinear(float distance, int velocity, uint32_t timeOut);
   // step 1:
-  flywheelBack.setVelocity(-63, pct);
-  flywheelFront.setVelocity(-63, pct);
+  flywheelBack.setVelocity(-100, pct);
+  flywheelFront.setVelocity(-100, pct);
   
   enableFlywheel();
   //step 2:
   //waitUntil(flywheelEncoder.velocity(rpm) > 2500);
   
-  wait(2000, msec);
+  wait(3000, msec);
   //step 3:
   fireDisc();
   //step 4:
-  flywheelBack.setVelocity(-65, pct);
-  flywheelFront.setVelocity(-65, pct);
+  flywheelBack.setVelocity(-100, pct);
+  flywheelFront.setVelocity(-100, pct);
   //waitUntil(flywheelEncoder.velocity(rpm) > 2500);
   wait(2000,msec);
   //step 5:
@@ -127,64 +127,134 @@ void Auton2() {
 
   //step 9:
 
-  ropeLauncher.open();
 }
 
 void skills() {
   //SKILLS (RED SIDE!!!)
   autoAimColor = SIGRED;
 
-  setRotGains(.05, 0.00000000001, 0, 20, 10); //update PID gains to tune robot
-  setLinGains(200, 0, 0, 20, 10);
-
-  moveLinear(-2, 100, 1000);
-
-  enableRollerWheel();
-  wait (500, msec);
-  disableRollerWheel();
-
-  moveLinear(22, 80, 30000);
-  moveRotate(90, 80, 3000);
-  moveLinear(-35, 80, 30000);
-
-  enableRollerWheel();
-
-  wait (500, msec);
-
-  disableRollerWheel();
-
-  moveLinear(30, 80, 3000);
-  moveRotate(180, 80, 3000);
-
-  enableIntake();
-
-  moveRotate(-120, 80, 3000);
-
-  autoAim(autoAimColor);  
-
-  flywheelBack.setVelocity(-40, pct);
-  flywheelFront.setVelocity(-40, pct);
-  
-  enableFlywheel();
-  
-  
-  wait(2000, msec);
-  
-  fireDisc();
+  setRotGains(.0325, 0.0000001, 0, 20, 10); //update PID gains to tune robot
+  setLinGains(150, 0.07, 0, 20, 10);
  
-  flywheelBack.setVelocity(-40, pct);
-  flywheelFront.setVelocity(-40, pct);
-  
-  wait(1000,msec);
-  
+//shoot preload 1
+  flywheelBack.setVelocity(-50, pct);
+  flywheelFront.setVelocity(-50, pct);
+  enableFlywheel(); 
+  wait(1000, msec);
   fireDisc();
 
+ //shoot preload 2
+  flywheelBack.setVelocity(-50, pct);
+  flywheelFront.setVelocity(-50, pct);
+  wait(500,msec);
+  fireDisc();
   disableFlywheel();
 
-  moveRotate(-100, 80, 3000);
+//roller 1
+  moveLinear(-52, 100, 2000);
+  moveStop(hold);
+  moveRotate(90, 100, 1000);
+  moveLinear(-3, 100, 1000);
+  enableRollerWheel();
+  wait(700, msec);
+  disableRollerWheel();
+  moveLinear(17, 100, 1000);
+  moveStop(hold);
 
+  //roller 2
+  moveRotate(-90, 100, 1000);
+  moveStop(hold);
+  intake.spin(reverse);
+  wait(500, msec);
+  moveLinear(-20, 100, 1000);
+  moveStop(hold);
+  enableRollerWheel();
+  wait(700, msec);
+  disableRollerWheel();
+  moveLinear(20, 100, 1000);
+  moveStop(hold);
+
+  //1 disc shot
+  moveRotate(-12, 100, 1000);
+  moveStop(hold);
+  intake.stop(coast);
+  flywheelBack.setVelocity(-75, pct);
+  flywheelFront.setVelocity(-75, pct);
+  enableFlywheel(); 
+  wait(2000, msec);
+  fireDisc();
+  disableFlywheel();
+  moveRotate(12, 100, 1000);
+  moveStop(hold);
+  intake.spin(reverse);
+
+  //cross to center
+  moveRotate(-132, 85, 2000);
+  moveStop(hold);
+  moveLinear(-15, 75, 1500);
+  moveStop(hold);
+  moveLinear(-35, 100, 1500);
+  moveStop(hold);
+
+  //turn and shoot
+  moveRotate(88, 75, 2000);
+  moveStop(hold);
+  flywheelBack.setVelocity(-60, pct);
+  flywheelFront.setVelocity(-60, pct);
+  enableFlywheel(); 
+  wait(2000, msec);
+  fireDisc();
+  wait(1500, msec);
+  fireDisc();
+  wait(1500, msec);
+  fireDisc();
+  intake.stop(coast);
+  disableFlywheel();
+
+  //turn back to corner
+  moveRotate(-88, 75, 2000);
+  moveStop(hold);
+  moveLinear(-95, 100, 1500);
+  moveStop(hold);
+  moveLinear(15, 100, 1000);
+  moveStop(hold);
+
+  //roller 3
+  moveRotate(45, 100, 1500);
+  moveStop(hold);
+  intake.spin(reverse);
+  wait(500, msec);
+  moveLinear(-24, 100, 1000);
+  moveStop(hold);
+  enableRollerWheel();
+  wait(700, msec);
+  disableRollerWheel();
+  moveLinear(16, 100, 1000);
+  moveStop(hold);
+  intake.stop(coast);
+
+  //roller 4
+  moveRotate(-90, 100, 1000);
+  moveStop(hold);
+  intake.spin(reverse);
+  wait(500, msec);
+  moveLinear(-24, 100, 1000);
+  moveStop(hold);
+  enableRollerWheel();
+  wait(700, msec);
+  disableRollerWheel();
+  moveLinear(26, 100, 1000);
+  moveStop(hold);
+  intake.stop(coast);
+  moveRotate(45, 100, 1000);
+  moveStop(hold);
+
+//rope Launch
   ropeLauncher.open();
+  moveLinear(-12, 100, 1000);
+  moveStop(hold);
 }
+
 
 void Auton3(){ 
   //BLUE NEAR
@@ -194,20 +264,20 @@ void Auton3(){
   setLinGains(150, 0.07, 0, 20, 10);
  
 
-  flywheelBack.setVelocity(-62, pct);
-  flywheelFront.setVelocity(-62, pct);
+  flywheelBack.setVelocity(-100, pct);
+  flywheelFront.setVelocity(-100, pct);
   
   enableFlywheel();
   
   
-  wait(2000, msec);
+  wait(3000, msec);
   
   fireDisc();
  
-  flywheelBack.setVelocity(-68, pct);
-  flywheelFront.setVelocity(-68, pct);
+  flywheelBack.setVelocity(-100, pct);
+  flywheelFront.setVelocity(-100, pct);
   
-  wait(1000,msec);
+  wait(2000,msec);
   
   fireDisc();
 
@@ -270,14 +340,14 @@ void Auton4(){
   enableFlywheel();
   
   
-  wait(2000, msec);
+  wait(3000, msec);
   
   fireDisc();
  
   flywheelBack.setVelocity(-100, pct);
   flywheelFront.setVelocity(-100, pct);
   
-  wait(1000,msec);
+  wait(2000,msec);
   
   fireDisc();
 
@@ -314,6 +384,8 @@ void Auton4(){
   disableRollerWheel();
 }
 
+///////////////////////////////////////////////
+
 void Auton5()
 {
   //RED NEAR SHORT
@@ -323,20 +395,19 @@ void Auton5()
   setLinGains(150, 0.07, 0, 20, 10);
  
 
-  flywheelBack.setVelocity(-62, pct);
-  flywheelFront.setVelocity(-62, pct);
+  flywheelBack.setVelocity(-66, pct);
+  flywheelFront.setVelocity(-66, pct);
   
   enableFlywheel();
   
   
-  wait(2000, msec);
+  wait(4500, msec);
   
   fireDisc();
  
-  flywheelBack.setVelocity(-68, pct);
-  flywheelFront.setVelocity(-68, pct);
-  
-  wait(1000,msec);
+  flywheelBack.setVelocity(-66, pct);
+  flywheelFront.setVelocity(-66, pct);
+  wait(3000,msec);
   
   fireDisc();
 
@@ -365,20 +436,20 @@ void Auton7()
   setLinGains(150, 0.07, 0, 20, 10);
  
 
-  flywheelBack.setVelocity(-62, pct);
-  flywheelFront.setVelocity(-62, pct);
+  flywheelBack.setVelocity(-73, pct);
+  flywheelFront.setVelocity(-73, pct);
   
   enableFlywheel();
   
   
-  wait(2000, msec);
+  wait(3000, msec);
   
   fireDisc();
  
-  flywheelBack.setVelocity(-68, pct);
-  flywheelFront.setVelocity(-68, pct);
+  flywheelBack.setVelocity(-92, pct);
+  flywheelFront.setVelocity(-92, pct);
   
-  wait(1000,msec);
+  wait(3000,msec);
   
   fireDisc();
 

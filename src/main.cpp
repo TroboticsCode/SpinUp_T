@@ -34,10 +34,12 @@ bool updateScreen = true;
 // full diagnol 95%
 
 pidStruct_t flyWheelPID;
-//uint8_t flywheelSpeeds[] = {45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100};
-uint16_t flywheelSpeeds[] = {1000, 1200, 1400, 1500, 1600, 1700, 1800, 1900, 2000, 2100, 2200, 2300, 2400, 2500, 2750, 3000, 3200};
+// uint8_t flywheelSpeeds[] = {45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100};
+uint16_t flywheelSpeeds[] = {1000, 1200, 1400, 1500, 1600, 1700,
+                             1800, 1900, 2000, 2100, 2200, 2300,
+                             2400, 2500, 2750, 3000, 3200};
 
-uint8_t speedSelector = 1;
+uint8_t speedSelector = 15;
 const uint8_t numSpeed = 17;
 
 bool flyWheelState = false;
@@ -56,7 +58,7 @@ void pre_auton(void) {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
 
-  pidInit(&flyWheelPID, 0.09, 0.00001, 0, 10, 20);
+  //pidInit(&flyWheelPID, 0.1, 0.00002, 0, 10, 10);
 
   Controller1.ButtonUp.pressed(cycle_autons);
   Brain.Screen.pressed(cycle_autons);
@@ -75,7 +77,7 @@ void autonomous(void) {
   case AutonRedFar:
     Auton2();
     break;
-    
+
   case AutonBlueNear:
     Auton3();
     break;
@@ -91,7 +93,7 @@ void autonomous(void) {
   case AutonRedFarShort:
     Auton6();
     break;
-    
+
   case AutonBlueNearShort:
     Auton7();
     break;
@@ -99,7 +101,7 @@ void autonomous(void) {
   case AutonBlueFarShort:
     Auton8();
     break;
-  
+
   case SKILLS:
     skills();
     break;
@@ -135,11 +137,10 @@ void updateSpeedDisplay(void) {
 
 void increaseSpeed(void) {
   if (speedSelector < numSpeed - 1) {
-      speedSelector++;
-      updateSpeedDisplay();
-    }
+    speedSelector++;
+    updateSpeedDisplay();
+  }
 }
-
 
 void decreaseSpeed(void) {
   if (speedSelector > 0) {
@@ -149,40 +150,30 @@ void decreaseSpeed(void) {
 }
 
 void usercontrol(void) {
-
   bool flyWheelButtonReleased = false;
-
   bool flywheelSpeedButtonReleased = false;
-  bool rumbleDone = true;
 
-  double maxCurrent = 0;
-  
   setLinGains(50, 0.007, 0, 40, 30);
   setRotGains(50, 0.007, 0, 40, 30);
   intake.setVelocity(100, pct);
 
   ropeLauncher.close();
-  
 
   while (1) {
 
     userDrive();
 
     if (flyWheelState) {
-      double motorVoltage = pidCalculate(&flyWheelPID, -1.0f * flywheelSpeeds[speedSelector],flywheelBack.velocity(rpm) * 7);
+      double motorVoltage = pidCalculate(&flyWheelPID, -1.0f * 2350,flywheelBack.velocity(rpm) * 7);
       motorVoltage = motorVoltage * 12 / 100.0f;
-      if(motorVoltage > 0)
+
+      if (motorVoltage > 0)
         motorVoltage = 0;
 
       printPIDValues(&flyWheelPID);
 
       flywheelFront.spin(forward, motorVoltage, voltageUnits::volt);
       flywheelBack.spin(forward, motorVoltage, voltageUnits::volt);
-
-      if (flywheelFront.current() > maxCurrent) // update max current val
-        maxCurrent = flywheelFront.current();
-
-      //rumbleDone = false;
 
     } else {
       flywheelFront.stop(coast);
@@ -195,7 +186,12 @@ void usercontrol(void) {
         flyWheelButtonReleased = false;
         flyWheelState = !flyWheelState;
 
-        updateSpeedDisplay();       
+        if(flyWheelState)
+        {
+          pidInit(&flyWheelPID, 0.1, 0.00003, 0, 10, 15);
+        }
+
+        updateSpeedDisplay();
       }
     } else {
       flyWheelButtonReleased = true;
@@ -211,15 +207,8 @@ void usercontrol(void) {
         }
       }
       flywheelSpeedButtonReleased = false;
-      rumbleDone = false;
     } else {
       flywheelSpeedButtonReleased = true;
-    }
-
-    // should only trigger once the motor current has rolled off
-    if (!rumbleDone && flywheelFront.current() < maxCurrent / 4) {
-      //Controller1.rumble("---");
-      rumbleDone = true;
     }
 
     // intake control
@@ -255,8 +244,7 @@ void usercontrol(void) {
       ropeLauncher.close();
     }
 
-    if(Controller1.ButtonX.pressing())
-    {
+    if (Controller1.ButtonX.pressing()) {
       autoAim(autoAimColor);
     }
 

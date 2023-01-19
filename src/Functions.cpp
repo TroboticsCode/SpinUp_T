@@ -43,7 +43,7 @@ void disableRollerWheel(void) { rollerWheel.stop(); }
 
 void autoAim(int color) {
   int motorPower = 15;
-  Brain.Screen.setCursor(1, 1);
+  //Brain.Screen.setCursor(1, 1);
   //Brain.Screen.print("Starting tower center routine");
 
   if (color == SIGRED)
@@ -61,24 +61,24 @@ void autoAim(int color) {
 
 
     // objectCenter = Vision1.largestObject.centerX;
-    Brain.Screen.setCursor(2, 2);
-    Brain.Screen.clearLine();
-    Brain.Screen.print(objectCenter);
+    // Brain.Screen.setCursor(2, 2);
+    // Brain.Screen.clearLine();
+    // Brain.Screen.print(objectCenter);
 
     if (objectCenter > CENTER_X + 30) {
-      Brain.Screen.print("turn right");
+      //Brain.Screen.print("turn right");
       BackRight.spin(directionType::rev, motorPower, velocityUnits::pct);
       BackLeft.spin(directionType::fwd, motorPower, velocityUnits::pct);
       FrontRight.spin(directionType::rev, motorPower, velocityUnits::pct);
       FrontLeft.spin(directionType::fwd, motorPower, velocityUnits::pct);
     } else if (objectCenter < CENTER_X +20) {
-      Brain.Screen.print("turn left ");
+      //Brain.Screen.print("turn left ");
       BackRight.spin(directionType::fwd, motorPower, velocityUnits::pct);
       BackLeft.spin(directionType::rev, motorPower, velocityUnits::pct);
       FrontRight.spin(directionType::fwd, motorPower, velocityUnits::pct);
       FrontLeft.spin(directionType::rev, motorPower, velocityUnits::pct);
     } else {
-      Brain.Screen.print("Dont move");
+      //Brain.Screen.print("Dont move");
       //Controller1.Screen.clearScreen();
       //Controller1.Screen.print("Auto Aim Done");
       BackRight.stop();
