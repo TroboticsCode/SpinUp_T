@@ -7,6 +7,7 @@
 ***********************************/
 
 #include "Autons.h"
+#include "Functions.h"
 
 int state = 0;
 char state_name[] = "NONE";
@@ -83,3 +84,19 @@ void cycle_autons(void)
     Paint_Screen();
 }
 
+double autonFlywheelControl(){
+  while(true){
+    double motorVoltage = pidCalculate(&flyWheelPID, -1.0f * 2500,flywheelBack.velocity(rpm) * 7);
+        motorVoltage = motorVoltage * 12 / 100.0f;
+
+        //if (motorVoltage > 0)
+        //  motorVoltage = 0;
+
+        printPIDValues(&flyWheelPID);
+ 
+        flywheelFront.spin(forward, motorVoltage, voltageUnits::volt);
+        flywheelBack.spin(forward, motorVoltage, voltageUnits::volt);
+        vex::task::sleep(60);
+  }
+  return 0;
+}

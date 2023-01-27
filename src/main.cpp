@@ -34,13 +34,10 @@ bool updateScreen = true;
 // full diagnol 95%
 
 pidStruct_t flyWheelPID;
-// uint8_t flywheelSpeeds[] = {45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100};
-uint16_t flywheelSpeeds[] = {1000, 1200, 1400, 1500, 1600, 1700,
-                             1800, 1900, 2000, 2100, 2200, 2300,
-                             2400, 2500, 2750, 3000, 3200};
+uint16_t flywheelSpeeds[] = {1850, 1900, 2150, 2200};
 
-uint8_t speedSelector = 15;
-const uint8_t numSpeed = 17;
+uint8_t speedSelector = 0;
+const uint8_t numSpeed = 4;
 
 bool flyWheelState = false;
 int autoAimColor = SIGRED;
@@ -164,7 +161,7 @@ void usercontrol(void) {
     userDrive();
 
     if (flyWheelState) {
-      double motorVoltage = pidCalculate(&flyWheelPID, -1.0f * 2350,flywheelBack.velocity(rpm) * 7);
+      double motorVoltage = pidCalculate(&flyWheelPID, -1.0f * flywheelSpeeds[speedSelector],flywheelBack.velocity(rpm) * 7);
       motorVoltage = motorVoltage * 12 / 100.0f;
 
       if (motorVoltage > 0)
