@@ -28,7 +28,9 @@ void disableRollerWheel(void);
 void disableIntake(void);
 void fireDisc(void);
 void autoAim(int color);
-double autonFlywheelControl(void);
+int autonFlywheelControl(void);
+void setAutonFlywheelSpeed(int16_t speed);
+
 
 extern int autoAimColor;
 extern pidStruct_t flyWheelPID;
