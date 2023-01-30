@@ -369,31 +369,31 @@ void Auton5() {
 void Auton6() // Testing the flywheel speed control
 // RED FAR SHORT
 {
-
-  pidInit(&flyWheelPID, 0.1, 0.00003, 0, 10,
-          15); // i think this sets the PID gains
+  pidInit(&flyWheelPID, 0.0425, 0.0001, 0.02, 20, 15);
   vex::task taskFlywheel(&autonFlywheelControl);
 
-  setAutonFlywheelSpeed(1000);
+  // setAutonFlywheelSpeed(1000);
 
-  wait(5, seconds);
+  // wait(5, seconds);
 
-  setAutonFlywheelSpeed(1500);
+  // setAutonFlywheelSpeed(1500);
 
-  wait(5, seconds);
+  // wait(5, seconds);
 
-  setAutonFlywheelSpeed(2000);
+  // setAutonFlywheelSpeed(2000);
 
-  wait(5, seconds);
+  // wait(5, seconds);
 
-  setAutonFlywheelSpeed(2500);
+  // setAutonFlywheelSpeed(2500);
 
-  wait(5, seconds);
+  // wait(5, seconds);
 
-  setAutonFlywheelSpeed(3000);
+  setAutonFlywheelSpeed(1850);
 
-  wait(5, seconds);
-
+  wait(60, seconds);
+  fireDisc();
+  wait(3, seconds);
+  fireDisc();
   disableFlywheel();
   taskFlywheel.stop();
 }
