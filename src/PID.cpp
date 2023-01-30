@@ -95,7 +95,12 @@ double pidCalculate(pidStruct_t *pid, double target, double current)
 
 void printPIDValues(pidStruct_t *pid)
 {
-  Brain.Screen.clearScreen();
+  Brain.Screen.clearLine(1);
+  Brain.Screen.clearLine(2);
+  Brain.Screen.clearLine(3);
+  Brain.Screen.clearLine(4);
+  Brain.Screen.clearLine(5);
+
   Brain.Screen.setCursor(1, 1);
   Brain.Screen.print("Error: %f\n", pid->error);
   Brain.Screen.newLine();

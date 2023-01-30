@@ -2,6 +2,7 @@
 #include "DriveFunctionsConfig.h"
 #include "Functions.h"
 #include "vex.h"
+#include "v5lvgl.h"
 
 // Put your auton routines in here
 
@@ -339,6 +340,7 @@ void Auton5() {
   setRotGains(.0325, 0.0000001, 0, 20, 10); // update PID gains to tune robot
   setLinGains(150, 0.07, 0, 20, 10);
 
+  //need ~2350 rpm here
   flywheelBack.setVelocity(-66, pct);
   flywheelFront.setVelocity(-66, pct);
 
@@ -361,39 +363,41 @@ void Auton5() {
 
   enableRollerWheel();
   uint32_t currTime = Brain.Timer.system();
-  while ((Brain.Timer.system() - currTime < 500))
-    ;
+  while ((Brain.Timer.system() - currTime < 500));
   disableRollerWheel();
 }
 
 void Auton6() // Testing the flywheel speed control
 // RED FAR SHORT
 {
+  //v5_lv_init();
+  //create_chart(lv_scr_act());
 
-  pidInit(&flyWheelPID, 0.1, 0.00003, 0, 10,
-          15); // i think this sets the PID gains
+  pidInit(&flyWheelPID, 0.0425, 0.0001, 0.02, 20, 15);
   vex::task taskFlywheel(&autonFlywheelControl);
 
-  setAutonFlywheelSpeed(1000);
+  // setAutonFlywheelSpeed(1000);
 
-  wait(5, seconds);
+  // wait(5, seconds);
 
-  setAutonFlywheelSpeed(1500);
+  // setAutonFlywheelSpeed(1500);
 
-  wait(5, seconds);
+  // wait(5, seconds);
 
-  setAutonFlywheelSpeed(2000);
+  // setAutonFlywheelSpeed(2000);
 
-  wait(5, seconds);
+  // wait(5, seconds);
 
-  setAutonFlywheelSpeed(2500);
+  // setAutonFlywheelSpeed(2500);
 
-  wait(5, seconds);
+  // wait(5, seconds);
 
-  setAutonFlywheelSpeed(3000);
+  setAutonFlywheelSpeed(1850);
 
-  wait(5, seconds);
-
+  wait(60, seconds);
+  fireDisc();
+  wait(3, seconds);
+  fireDisc();
   disableFlywheel();
   taskFlywheel.stop();
 }

@@ -63,6 +63,7 @@ void pre_auton(void) {
 }
 
 void autonomous(void) {
+  //can init task and pid here to apply to all autons
   switch (state) {
   case NONE:
     break;
