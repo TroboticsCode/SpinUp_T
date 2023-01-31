@@ -370,9 +370,6 @@ void Auton5() {
 void Auton6() // Testing the flywheel speed control
 // RED FAR SHORT
 {
-  //v5_lv_init();
-  //create_chart(lv_scr_act());
-
   pidInit(&flyWheelPID, 0.0425, 0.0001, 0.02, 20, 15);
   vex::task taskFlywheel(&autonFlywheelControl);
 

@@ -101,28 +101,49 @@ void autoAim(int color) {
 
 int autonFlywheelControl(void) {
   uint8_t loopCount = 0;
+
+  //init for graph library
+  v5_lv_init();
+
+  //setup chart
+  lv_obj_t * chart = lv_chart_create(lv_scr_act(), NULL);
+
+  lv_chart_set_type(chart, LV_CHART_TYPE_POINT);
+
+  lv_chart_set_point_count(chart, 460 );
+  lv_obj_set_size(chart, 460, 220 );
+  lv_obj_set_pos(chart, 10, 10);
+
+  lv_chart_set_update_mode(chart, LV_CHART_UPDATE_MODE_SHIFT);
+
+  lv_chart_series_t * s1 = lv_chart_add_series(chart, LV_COLOR_WHITE);
+  lv_chart_series_t * s2 = lv_chart_add_series(chart, LV_COLOR_RED);
+  
   while (true) {
-    double motorVoltage = pidCalculate(&flyWheelPID, -1.0f * autonFlywheelSpeed,
-                                       flywheelBack.velocity(rpm) * 7);
+    double motorVoltage = pidCalculate(&flyWheelPID, -1.0f * autonFlywheelSpeed, flywheelBack.velocity(rpm) * 7);
     motorVoltage = motorVoltage * 12 / 100.0f;
 
     if (motorVoltage > 0)
       motorVoltage = 0;
 
-    printPIDValues(&flyWheelPID);
+    //printPIDValues(&flyWheelPID);
 
     flywheelFront.spin(forward, motorVoltage, voltageUnits::volt);
     flywheelBack.spin(forward, motorVoltage, voltageUnits::volt);
+
+    //add data points to graph
+    lv_chart_set_next(chart, s1, autonFlywheelSpeed);
+    lv_chart_set_next(chart, s2, flywheelBack.velocity(rpm));
 
     loopCount++;
 
     if(loopCount > 4)
     {
-      Brain.Screen.clearLine(7);
-      Brain.Screen.setCursor(7, 1);
-      Brain.Screen.print("Wheel Speed: ");
-      Brain.Screen.print(flywheelBack.velocity(rpm) * 7);
-      Brain.Screen.print(" RPM");
+      // Brain.Screen.clearLine(7);
+      // Brain.Screen.setCursor(7, 1);
+      // Brain.Screen.print("Wheel Speed: ");
+      // Brain.Screen.print(flywheelBack.velocity(rpm) * 7);
+      // Brain.Screen.print(" RPM");
 
       loopCount = 0;
     }
@@ -131,19 +152,20 @@ int autonFlywheelControl(void) {
   return 0;
 }
 
-void create_chart(lv_obj_t * parent) {
+//don't need to use for now, just do this when the task is created
+void create_chart(lv_obj_t * parent) 
+{
   lv_obj_t * chart = lv_chart_create(parent, NULL);
+
   lv_chart_set_type(chart, LV_CHART_TYPE_POINT);
+
   lv_chart_set_point_count(chart, 460 );
   lv_obj_set_size(chart, 460, 220 );
   lv_obj_set_pos(chart, 10, 10);
+
   lv_chart_set_update_mode(chart, LV_CHART_UPDATE_MODE_SHIFT);
+
   lv_chart_series_t * s1 = lv_chart_add_series(chart, LV_COLOR_WHITE);
   lv_chart_series_t * s2 = lv_chart_add_series(chart, LV_COLOR_RED);
-
-  int x = 0;
-  int t = 0;
-
-  lv_chart_set_next(chart, s1, sin( x / 180.0 * 3.141) * 40 + 50 );
 }
 

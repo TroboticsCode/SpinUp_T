@@ -19,6 +19,8 @@
 #include "v5.h"
 #include "v5_vcs.h"
 
+#include "v5lvgl.h"
+
 #include "robot-config.h"
 
 //include "testingAuton1.cpp"
