@@ -11,32 +11,38 @@ SRC_C  = $(wildcard src/*.cpp)
 SRC_C += $(wildcard src/*.c)
 SRC_C += $(wildcard src/*/*.cpp) 
 SRC_C += $(wildcard src/*/*.c)
-SRC_C += $(wildcard lvgl/src/*/*.c) 
+SRC_C += $(wildcard Graphing/*.c) 
+SRC_C += $(wildcard Graphing/*/*/*/*.c) 
 
 OBJ = $(addprefix $(BUILD)/, $(addsuffix .o, $(basename $(SRC_C))) )
 
 # location of include files that c and cpp files depend on
 SRC_H  = $(wildcard include/*.h)
+SRC_H  += $(wildcard Graphing/*.h)
+SRC_H  += $(wildcard Graphing/lvgl/*.h)
+SRC_H  += $(wildcard Graphing/*.c)
 
 # additional dependancies
 SRC_A  = makefile
 
 # project header file locations
-INC_F  = include . lvgl lvgl/src
+INC_F  = include . lvgl lvgl/src Graphing/lvgl Graphing/
 
 # headers needed to use library
-LV_SRC_H += $(wildcard lvgl/lvgl.h) 
-LV_SRC_H += $(wildcard lvgl/src/*.h) 
-LV_SRC_H += $(wildcard lvgl/src/*/*.h)
+LV_SRC_H = $(wildcard Graphing/lvgl/*.h) 
+LV_SRC_H += $(wildcard Graphing/lvgl/src/*.h) 
+LV_SRC_H += $(wildcard Graphing/lvgl/src/*/*.h)
+LV_SRC_H += $(wildcard Graphing/*.h)
 
 LV_DST_H = $(addprefix $(BUILD)/include/, $(LV_SRC_H) )
-LV_DST_H += $(BUILD)/include/lv_conf.h $(BUILD)/include/v5lvgl.h
+#LV_DST_H += $(BUILD)/Graphing/lv_conf.h $(BUILD)/Graphing/v5lvgl.h
+
 
 $(BUILD)/include/%: %
 	$(Q)$(MKDIR)
 	$(Q) $(call copyfile,$^, $@)
 
-vpath %.h lvgl/ include/
+vpath %.h Graphing/ lvgl/ include/
 
 # override default library name
 PROJECTLIB = libv5lvgl
