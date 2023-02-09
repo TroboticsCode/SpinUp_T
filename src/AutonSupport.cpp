@@ -81,7 +81,7 @@ void cycle_autons(void)
         state = NONE;
         strcpy(state_name, "NONE");
     }
-    else if (state == skills2)
+    else if (state == SKILLS2)
     {
         state = NONE;
         strcpy(state_name, "NONE");

@@ -18,7 +18,7 @@
 #define AutonBlueNearShort  7
 #define AutonBlueFarShort   8
 #define SKILLS              9
-#define skills2             10
+#define SKILLS2             10
 
 
 extern int state;
@@ -37,5 +37,6 @@ void Auton6(void);
 void Auton7(void);
 void Auton8(void);
 void skills(void);
+void skills2(void);
 
 #endif

@@ -443,68 +443,6 @@ void Auton8() {
   // BLUE FAR SHORT
 }
 
-void SKILLS(){
-  autoAimColor = SIGRED;
-
-  setRotGains(.0325, 0.0000001, 0, 20, 10); // update PID gains to tune robot
-  setLinGains(150, 0.07, 0, 20, 10);
-
-  flywheelBack.setVelocity(-100, pct);
-  flywheelFront.setVelocity(-100, pct);
-
-  enableFlywheel();
-
-  wait(3000, msec);
-
-  fireDisc();
-
-  flywheelBack.setVelocity(-100, pct);
-  flywheelFront.setVelocity(-100, pct);
-
-  wait(2000, msec);
-
-  fireDisc();
-
-  disableFlywheel();
-
-  moveRotate(15, 100, 2000);
-  moveStop(hold);
-  moveLinear(-8, 100, 1000);
-
-  enableRollerWheel();
-  uint32_t currTime = Brain.Timer.system();
-  while ((Brain.Timer.system() - currTime < 500))
-    ;
-  disableRollerWheel();
-
-  // move away from roller, then drive to other roller
-  moveLinear(5, 100, 1000);
-  moveRotate(50, 100, 3000);
-  moveLinear(80, 100, 3000);
-  moveStop(hold);
-
-  // rotate a bit further so we stay on our side of the field
-  moveRotate(135, 100, 1000);
-  moveStop(hold);
-
-  // turn around to face the roller
-  moveLinear(-5, 100, 1000); // back up to the roller
-  moveStop(hold);
-  moveRotate(23, 100, 3000);
-  moveLinear(-38, 100, 1500);
-  moveRotate(20, 100, 1000);
-  moveLinear(-6, 100, 1000);
-  moveRotate(5, 100, 1000);
-  moveLinear(-2, 100, 1000);
-
-  // enable roller motor
-  enableRollerWheel();
-  currTime = Brain.Timer.system();
-  while ((Brain.Timer.system() - currTime < 500))
-    ;
-  disableRollerWheel();
-}
-
 void skills2() {
   // RED FAR
   autoAimColor = SIGRED;
