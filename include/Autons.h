@@ -18,6 +18,7 @@
 #define AutonBlueNearShort  7
 #define AutonBlueFarShort   8
 #define SKILLS              9
+#define skills2             10
 
 
 extern int state;

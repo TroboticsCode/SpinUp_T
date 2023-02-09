@@ -103,6 +103,9 @@ void autonomous(void) {
     skills();
     break;
 
+  case skills2:
+    skills2();
+    break;
   // Default = NO autonomous
   default:
     break;
