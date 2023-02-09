@@ -114,6 +114,8 @@ int autonFlywheelControl(void) {
   lv_obj_set_size(chart, 460, 220 );
   lv_obj_set_pos(chart, 10, 10);
 
+  lv_chart_set_range(chart, 0, 3500);
+
   lv_chart_set_update_mode(chart, LV_CHART_UPDATE_MODE_SHIFT);
 
   lv_chart_series_t * s1 = lv_chart_add_series(chart, LV_COLOR_WHITE);
