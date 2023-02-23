@@ -31,57 +31,25 @@ void cycle_autons(void)
 {
     if (state == 0)
     {
-        state = AutonRedNear;
-        strcpy(state_name, "Auton Red Near");
+        state = AutonNear;
+        strcpy(state_name, "Auton Near");
     }
-    else if (state == AutonRedNear)
+    else if (state == AutonNear)
     {
-         state =   AutonRedFar;
-         strcpy(state_name, "Auton Red Far");
+         state =   AutonFar;
+         strcpy(state_name, "Auton Far");
     }
-    else if (state == AutonRedFar)
+    else if (state == AutonFar)
     {
-        state = AutonBlueNear;
-        strcpy(state_name, "Auton Blue Near");
+        state = AutonSkills;
+        strcpy(state_name, "Auton Skills");
     }
-    else if (state == AutonBlueNear)
+    else if (state == AutonSkills)
     {
-        state = AutonBlueFar;
-        strcpy(state_name, "Auton Blue Far");
+        state = AutonTest;
+        strcpy(state_name, "Auton Test");
     }
-    else if (state == AutonBlueFar)
-    {
-        state = AutonRedNearShort;
-        strcpy(state_name, "Auton Red Near Short");
-    }
-    
-    //shorts
-    else if (state == AutonRedNearShort)
-    {
-         state =   AutonRedFarShort;
-         strcpy(state_name, "Auton Red Far Short");
-    }
-    else if (state == AutonRedFarShort)
-    {
-        state = AutonBlueNearShort;
-        strcpy(state_name, "Auton Blue Near Short");
-    }
-    else if (state == AutonBlueNearShort)
-    {
-        state = AutonBlueFarShort;
-        strcpy(state_name, "Auton Blue Far Short");
-    }
-    else if (state == AutonBlueFarShort)
-    {
-        state = SKILLS;
-        strcpy(state_name, "Skills");
-    }
-    else if (state == SKILLS)
-    {
-        state = NONE;
-        strcpy(state_name, "NONE");
-    }
-    else if (state == SKILLS2)
+    else if (state == AutonTest)
     {
         state = NONE;
         strcpy(state_name, "NONE");

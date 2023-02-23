@@ -17,7 +17,7 @@ using namespace vex;
 
 //function declarations
 void moveLinear(float distance, int velocity, uint32_t timeOut);
-void moveRotate(int16_t degrees, int velocity, uint32_t timeOut);
+void moveRotate(double degrees, int velocity, uint32_t timeOut);
 void moveStop(brakeType brake_type);
 void userDrive(void);
 

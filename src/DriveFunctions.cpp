@@ -199,12 +199,13 @@ static double rot_kD = 0;
 static double rot_slewRate = 20;
 static int    rot_minDT = 10;
 
-void moveRotate(int16_t degrees, int velocity, uint32_t timeOut)
+void moveRotate(double degrees, int velocity, uint32_t timeOut)
 {
   float arcLength = (degrees/360.0f) * CIRCUMFERENCE;
   float rotFactor = ROTATION_FACTOR;
   float rotations = arcLength / rotFactor;
 
+/*
   Brain.Screen.clearScreen();
   Brain.Screen.setCursor(1, 1);
   Brain.Screen.print("rotations: %f", rotations);
@@ -216,9 +217,17 @@ void moveRotate(int16_t degrees, int velocity, uint32_t timeOut)
   Brain.Screen.print("Circ: %f", CIRCUMFERENCE);
   Brain.Screen.newLine();
   Brain.Screen.print("rotations factor: %f", ROTATION_FACTOR);
-  
+  */
 
-#if defined(PID) 
+#if defined(PID)
+myGyro.resetRotation();
+uint64_t startTime = Brain.timer(timeUnits::msec);
+  pidStruct_t rotatePID;
+  pidInit(&rotatePID, rot_kP, rot_kI, rot_kD, rot_slewRate, rot_minDT);
+
+  float motorPower = 0;
+
+/*
   #ifdef GYRO
     myGyro.calibrate();
     while(myGyro.isCalibrating());
@@ -256,6 +265,8 @@ void moveRotate(int16_t degrees, int velocity, uint32_t timeOut)
 
     float motorPower = 0;
   #endif
+  */
+
 
   do
   {

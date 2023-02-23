@@ -30,6 +30,7 @@ void fireDisc(void);
 void autoAim(int color);
 int autonFlywheelControl(void);
 void setAutonFlywheelSpeed(int16_t speed);
+void autonRollerMove(int16_t);
 
 
 extern int autoAimColor;
