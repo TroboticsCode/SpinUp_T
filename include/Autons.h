@@ -9,16 +9,10 @@
 //number them sequentially and match them to the cases names
 //in autonomous() in main.cpp
 #define NONE                0  
-#define AutonRedNear        1
-#define AutonRedFar         2
-#define AutonBlueNear       3
-#define AutonBlueFar        4
-#define AutonRedNearShort   5
-#define AutonRedFarShort    6
-#define AutonBlueNearShort  7
-#define AutonBlueFarShort   8
-#define SKILLS              9
-#define SKILLS2             10
+#define AutonNear           1
+#define AutonFar            2
+#define AutonSkills         3
+#define AutonTest           4
 
 
 extern int state;
@@ -32,11 +26,5 @@ void Auton1(void);
 void Auton2(void);
 void Auton3(void);
 void Auton4(void);
-void Auton5(void);
-void Auton6(void);
-void Auton7(void);
-void Auton8(void);
-void skills(void);
-void skills2(void);
 
 #endif

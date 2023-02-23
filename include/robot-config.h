@@ -18,10 +18,14 @@ extern pneumatics ropeLauncher;
 
 extern bumper intakeSwitch;
 
- /* Used to initialize code/tasks/devices added using tools in VEXcode Text.
- * 
+extern encoder leftTracker;
+extern encoder rightTracker;
+extern encoder backTracker;
+
+/* Used to initialize code/tasks/devices added using tools in VEXcode Text.
+ *
  * This should be called at the start of your int main function.
  */
-void  vexcodeInit( void );
+void vexcodeInit(void);
 
 #endif

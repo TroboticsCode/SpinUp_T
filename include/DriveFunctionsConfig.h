@@ -17,7 +17,7 @@ using namespace vex;
 
 //function declarations
 void moveLinear(float distance, int velocity, uint32_t timeOut);
-void moveRotate(int16_t degrees, int velocity, uint32_t timeOut);
+void moveRotate(double degrees, int velocity, uint32_t timeOut);
 void moveStop(brakeType brake_type);
 void userDrive(void);
 
@@ -119,7 +119,8 @@ void userDrive(void);
 #define GEAR_SET    GREEN
 
 #define PID
-#define GYRO
+//#define GYRO
+#define Odometry
 
 #ifdef PID
   void setLinGains(double kP, double kI, double kD, double slewRate, int minDT);

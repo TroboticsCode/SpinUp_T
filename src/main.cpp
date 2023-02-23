@@ -34,10 +34,12 @@ bool updateScreen = true;
 // full diagnol 95%
 
 pidStruct_t flyWheelPID;
-uint16_t flywheelSpeeds[] = {1850, 1900, 2150, 2200};
+uint16_t flywheelSpeeds[] = {1900, 2150, 2200};
 
 uint8_t speedSelector = 0;
-const uint8_t numSpeed = 4;
+const uint8_t numSpeed = 3;
+const float kV = 0.004; //flywheel gain
+const float flywheelOffset = 2; //min voltage for movement
 
 bool flyWheelState = false;
 int autoAimColor = SIGRED;
@@ -55,7 +57,7 @@ void pre_auton(void) {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
 
-  //pidInit(&flyWheelPID, 0.1, 0.00002, 0, 10, 10);
+  pidInit(&flyWheelPID, 0.1, 0.00002, 0, 10, 10);
 
   Controller1.ButtonUp.pressed(cycle_autons);
   Brain.Screen.pressed(cycle_autons);
@@ -67,45 +69,22 @@ void autonomous(void) {
   case NONE:
     break;
 
-  case AutonRedNear:
+  case AutonNear:
     Auton1();
     break;
 
-  case AutonRedFar:
+  case AutonFar:
     Auton2();
     break;
 
-  case AutonBlueNear:
+  case AutonSkills:
     Auton3();
     break;
 
-  case AutonBlueFar:
+  case AutonTest:
     Auton4();
     break;
 
-  case AutonRedNearShort:
-    Auton5();
-    break;
-
-  case AutonRedFarShort:
-    Auton6();
-    break;
-
-  case AutonBlueNearShort:
-    Auton7();
-    break;
-
-  case AutonBlueFarShort:
-    Auton8();
-    break;
-
-  case SKILLS:
-    skills();
-    break;
-
-  case SKILLS2:
-    skills2();
-    break;
   // Default = NO autonomous
   default:
     break;
@@ -153,8 +132,8 @@ void usercontrol(void) {
   bool flyWheelButtonReleased = false;
   bool flywheelSpeedButtonReleased = false;
 
-  setLinGains(50, 0.007, 0, 40, 30);
-  setRotGains(50, 0.007, 0, 40, 30);
+  //setLinGains(50, 0.007, 0, 40, 30);
+  //setRotGains(50, 0.007, 0, 40, 30);
   intake.setVelocity(100, pct);
 
   ropeLauncher.close();
@@ -164,13 +143,18 @@ void usercontrol(void) {
     userDrive();
 
     if (flyWheelState) {
-      double motorVoltage = pidCalculate(&flyWheelPID, -1.0f * flywheelSpeeds[speedSelector],flywheelBack.velocity(rpm) * 7);
-      motorVoltage = motorVoltage * 12 / 100.0f;
+      double motorVoltage = 0.8 * kV * -1.0f * flywheelSpeeds[speedSelector];
+      motorVoltage += 0.2 * (12 / 100.0f) * (pidCalculate(&flyWheelPID, -1.0f * flywheelSpeeds[speedSelector],flywheelBack.velocity(rpm) * 7));
+
+      if(fabs(motorVoltage) < flywheelOffset)
+        motorVoltage = -1.0f * flywheelOffset;
+      
+      //motorVoltage = -1.0f * speedSelector;
 
       if (motorVoltage > 0)
         motorVoltage = 0;
 
-      printPIDValues(&flyWheelPID);
+      //printPIDValues(&flyWheelPID);
 
       flywheelFront.spin(forward, motorVoltage, voltageUnits::volt);
       flywheelBack.spin(forward, motorVoltage, voltageUnits::volt);
@@ -213,7 +197,7 @@ void usercontrol(void) {
 
     // intake control
     // make sure we dont pick up too many discs
-    if (Controller1.ButtonY.pressing() && !intakeSwitch.pressing()) {
+    if (Controller1.ButtonY.pressing()) {
       intake.spin(reverse);
     } else if (Controller1.ButtonRight.pressing()) {
       intake.spin(fwd);
@@ -253,6 +237,12 @@ void usercontrol(void) {
     Brain.Screen.print("Wheel Speed: ");
     Brain.Screen.print(flywheelBack.velocity(rpm) * 7);
     Brain.Screen.print(" RPM");
+
+    Brain.Screen.clearLine(8);
+    Brain.Screen.setCursor(8, 1);
+    Brain.Screen.print("Motor Volts: ");
+    Brain.Screen.print(flywheelBack.voltage());
+
     wait(20, msec); // Sleep the task for a short amount of time to
   }
 }

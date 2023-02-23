@@ -99,14 +99,21 @@ void autoAim(int color) {
    FrontLeft.stop(brakeType::brake);*/
 }
 
+const float kV = 0.004; //flywheel gain
+const float flywheelOffset = 2; //min voltage for movement
 int autonFlywheelControl(void) {
+  pidInit(&flyWheelPID, 0.0425, 0.0001, 0.02, 15, 15);
   while (true) {
-    double motorVoltage = pidCalculate(&flyWheelPID, -1.0f * autonFlywheelSpeed,
-                                       flywheelBack.velocity(rpm) * 7);
-    motorVoltage = motorVoltage * 12 / 100.0f;
+    double motorVoltage = 0.8 * kV * -1.0f * autonFlywheelSpeed;
+      motorVoltage += 0.2 * (12 / 100.0f) * (pidCalculate(&flyWheelPID, -1.0f * autonFlywheelSpeed,flywheelBack.velocity(rpm) * 7));
 
-    if (motorVoltage > 0)
-      motorVoltage = 0;
+      if(fabs(motorVoltage) < flywheelOffset)
+        motorVoltage = -1.0f * flywheelOffset;
+      
+      //motorVoltage = -1.0f * speedSelector;
+
+      if (motorVoltage > 0)
+        motorVoltage = 0;
 
     printPIDValues(&flyWheelPID);
 

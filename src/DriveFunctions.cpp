@@ -5,6 +5,7 @@
  *******************************************************************/
 
 #include "DriveFunctionsConfig.h"
+#include "Odometry.h"
 using namespace vex;
 
 #ifdef CHASSIS_4_MOTOR_INLINE
@@ -23,6 +24,10 @@ using namespace vex;
 
 #ifdef GYRO
   inertial myGyro = inertial(GYRO_PORT);
+#endif
+
+#ifdef Odometry
+
 #endif
 
 ////////////////User Drive Functions/////////////////////////
@@ -136,7 +141,7 @@ void moveLinear(float distance, int velocity, uint32_t timeOut)
     uint64_t startTime = Brain.timer(timeUnits::msec);
   #endif
  
-  printPIDValues(&driveR_PID);
+  //printPIDValues(&driveR_PID);
 
   do
   {
@@ -199,12 +204,13 @@ static double rot_kD = 0;
 static double rot_slewRate = 20;
 static int    rot_minDT = 10;
 
-void moveRotate(int16_t degrees, int velocity, uint32_t timeOut)
+void moveRotate(double degrees, int velocity, uint32_t timeOut)
 {
   float arcLength = (degrees/360.0f) * CIRCUMFERENCE;
   float rotFactor = ROTATION_FACTOR;
   float rotations = arcLength / rotFactor;
 
+/*
   Brain.Screen.clearScreen();
   Brain.Screen.setCursor(1, 1);
   Brain.Screen.print("rotations: %f", rotations);
@@ -216,112 +222,34 @@ void moveRotate(int16_t degrees, int velocity, uint32_t timeOut)
   Brain.Screen.print("Circ: %f", CIRCUMFERENCE);
   Brain.Screen.newLine();
   Brain.Screen.print("rotations factor: %f", ROTATION_FACTOR);
-  
+  */
 
-#if defined(PID) 
-  #ifdef GYRO
-    myGyro.calibrate();
-    while(myGyro.isCalibrating());
-    myGyro.resetRotation();
-  #endif
 
-  #ifdef CHASSIS_2_MOTOR_INLINE
-    DriveLeft.resetRotation();
-    DriveRight.resetRotation();
-  #elif defined CHASSIS_4_MOTOR_INLINE
-    FrontLeft.resetRotation();
-    FrontRight.resetRotation();
-    BackLeft.resetRotation();
-    BackRight.resetRotation();
+  uint64_t startTime = Brain.timer(timeUnits::msec);
+  pidStruct_t rotatePID;
+  pidInit(&rotatePID, rot_kP, rot_kI, rot_kD, rot_slewRate, rot_minDT);
 
-    double leftRevAvg  = 0;
-    double rightRevAvg = 0;
+  float motorPower = 0;
 
-    uint64_t startTime = Brain.timer(timeUnits::msec);
-  #endif
-
-  #if !defined GYRO
-    pidStruct_t rotateR_PID;
-    pidStruct_t rotateL_PID;
-
-    pidInit(&rotateR_PID, rot_kP, rot_kI, rot_kD, rot_slewRate, rot_minDT);
-    pidInit(&rotateL_PID, rot_kP, rot_kI, rot_kD, rot_slewRate, rot_minDT);
-
-    float DriveR_Power = 0;
-    float DriveL_Power = 0;
-
-  #elif defined GYRO
-    pidStruct_t rotatePID;
-    pidInit(&rotatePID, rot_kP, rot_kI, rot_kD, rot_slewRate, rot_minDT);
-
-    float motorPower = 0;
-  #endif
+  FrontLeft.resetRotation();
+  FrontRight.resetRotation();
+  BackLeft.resetRotation();
+  BackRight.resetRotation();
 
   do
   {
-  #if defined (GYRO)
-    motorPower = (velocity/100.0f) * pidCalculate(&rotatePID, degrees, myGyro.rotation(rotationUnits::deg));
-  #elif !defined (GYRO)
-    #ifdef CHASSIS_4_MOTOR_INLINE
-      leftRevAvg = (BackLeft.rotation(rev) + FrontLeft.rotation(rev)) / 2.0;
-      rightRevAvg = (BackRight.rotation(rev) + FrontRight.rotation(rev)) / 2.0;
+  motorPower = (velocity/100.0f) * pidCalculate(&rotatePID, degrees, get_tAbs_deg());
+  //printPIDValues(&rotatePID);
 
-      DriveL_Power = (velocity/100.0f) * pidCalculate(&rotateL_PID, rotations, -1.0 * leftRevAvg) / 100.0f;
-      DriveR_Power = (velocity/100.0f) * pidCalculate(&rotateR_PID, rotations, rightRevAvg) / 100.0f;
-    #elif defined CHASSIS_2_MOTOR_INLINE
-      DriveL_Power = (velocity/100.0f) * pidCalculate(&rotateL_PID, rotations, DriveLeft.rotation(rev) / 100.0f);
-      DriveR_Power = (velocity/100.0f) * pidCalculate(&rotateR_PID, rotations, -1.0f * DriveRight.rotation(rev) / 100.0f);
-    #endif
-  #endif
-
-  #if defined (GYRO)
-    printPIDValues(&rotatePID);
-    #ifdef CHASSIS_4_MOTOR_INLINE
-      FrontRight.spin(reverse, 12 * motorPower, voltageUnits::volt);
-      FrontLeft.spin(forward, 12 * motorPower, voltageUnits::volt);
-      BackLeft.spin(forward, 12 * motorPower, voltageUnits::volt);
-      BackRight.spin(reverse, 12 * motorPower, voltageUnits::volt);
-
-    #elif defined CHASSIS_2_MOTOR_INLINE
-      DriveRight.spin(reverse, 12 * motorPower, voltageUnits::volt);
-      DriveLeft.spin(forward, 12 * motorPower, voltageUnits::volt);
-    #endif
-
-  #else 
-    printPIDValues(&rotateR_PID);
-    #ifdef CHASSIS_4_MOTOR_INLINE
-      FrontRight.spin(forward, 12 * DriveR_Power, voltageUnits::volt);
-      FrontLeft.spin(reverse, 12 * DriveL_Power, voltageUnits::volt);
-      BackLeft.spin(reverse, 12 * DriveL_Power, voltageUnits::volt);
-      BackRight.spin(forward, 12 * DriveR_Power, voltageUnits::volt);
-
-    #elif defined CHASSIS_2_MOTOR_INLINE
-      DriveRight.spin(reverse, 12 * DriveR_Power, voltageUnits::volt);
-      DriveLeft.spin(forward, 12 * DriveL_Power, voltageUnits::volt);
-    #endif
-  #endif
+  FrontRight.spin(reverse, 12 * motorPower, voltageUnits::volt);
+  FrontLeft.spin(forward, 12 * motorPower, voltageUnits::volt);
+  BackLeft.spin(forward, 12 * motorPower, voltageUnits::volt);
+  BackRight.spin(reverse, 12 * motorPower, voltageUnits::volt);
 
   wait(10, msec);
 
-  #if defined GYRO
   }while((fabs(rotatePID.avgError) > 0.3) && (Brain.timer(timeUnits::msec) - startTime < timeOut)); //error in degrees
-  #elif !defined GYRO
-  }while((fabs(rotateR_PID.avgError) > 0.1 || fabs(rotateL_PID.avgError) > 0.1) && (Brain.timer(timeUnits::msec) - startTime < timeOut)); //error in units of revs
-  #endif
   //end do-while
-
-#elif !defined(PID) && !defined(GYRO)
-  #ifdef CHASSIS_4_MOTOR_INLINE
-    FrontLeft.rotateFor(rotations, rotationUnits::rev, velocity, velocityUnits::pct, false);
-    BackLeft.rotateFor(rotations, rotationUnits::rev, velocity, velocityUnits::pct, false);
-    FrontRight.rotateFor(-1*rotations, rotationUnits::rev, velocity, velocityUnits::pct, false);
-    BackRight.rotateFor(-1*rotations, rotationUnits::rev, velocity, velocityUnits::pct, true);
-
-  #elif defined CHASSIS_2_MOTOR_INLINE
-    DriveRight.rotateFor(-1*rotations, rotationUnits::rev, velocity, velocityUnits::pct, false);
-    DriveLeft.rotateFor(rotations, rotationUnits::rev, velocity, velocityUnits::pct, true);
-  #endif
-#endif
 }
 
 #if defined(PID)
