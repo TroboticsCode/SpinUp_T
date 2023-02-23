@@ -34,10 +34,10 @@ bool updateScreen = true;
 // full diagnol 95%
 
 pidStruct_t flyWheelPID;
-uint16_t flywheelSpeeds[] = {1850, 1900, 2150, 2200};
+uint16_t flywheelSpeeds[] = {1900, 2150, 2200};
 
 uint8_t speedSelector = 0;
-const uint8_t numSpeed = 4;
+const uint8_t numSpeed = 3;
 
 bool flyWheelState = false;
 int autoAimColor = SIGRED;
@@ -56,7 +56,7 @@ void pre_auton(void) {
   vexcodeInit();
 
   //pidInit(&flyWheelPID, 0.1, 0.00002, 0, 10, 10);
-
+  myGyro.calibrate();
   Controller1.ButtonUp.pressed(cycle_autons);
   Brain.Screen.pressed(cycle_autons);
   return;

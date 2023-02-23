@@ -92,13 +92,144 @@ void Auton2() {
   fireDisc();
   disableFlywheel();
 }
+void skills(){
+  // NEW SKILLS
+  autoAimColor = SIGRED;
 
-void skills() {
+  //Set Gains
+  setRotGains(.0325, 0.0000001, 0, 20, 10); // update PID gains to tune robot
+  setLinGains(35, 0.0075, 0, 20, 10);
+  pidInit(&flyWheelPID, 0.0425, 0.0001, 0.02, 20, 15);
+  //Start FlyWheel PID Task
+
+  vex::task taskFlywheel(&autonFlywheelControl);
+
+  //Shoot Preloads
+  setAutonFlywheelSpeed(1900);
+  enableFlywheel();
+  wait(1500, msec);
+  fireDisc();
+  wait(500, msec);
+  fireDisc();
+  disableFlywheel();
+  setAutonFlywheelSpeed(0);
+
+  // roller 1
+  moveLinear(-55, 100, 3000);
+  moveStop(hold);
+  moveRotate(90, 100, 3000);
+  moveLinear(-7, 100, 1000);
+  enableRollerWheel();
+  wait(700, msec);
+  disableRollerWheel();
+
+  // recalibrate since we hit the wall
+  while (myGyro.isCalibrating())
+    ;
+
+  moveLinear(16, 100, 3000);
+  moveStop(hold);
+
+  // roller 2
+  moveRotate(-90, 100, 3000);
+  moveStop(hold);
+  intake.spin(reverse);
+  wait(500, msec);
+  moveLinear(-24, 100, 3000);
+  moveStop(hold);
+  enableRollerWheel();
+  wait(700, msec);
+  disableRollerWheel();
+
+  while (myGyro.isCalibrating())
+    ;
+
+  moveLinear(20, 100, 3000);
+  moveStop(hold);
+
+  // 1 disc shot
+  moveRotate(-10, 100, 2000);
+  moveStop(hold);
+  intake.stop(coast);
+  setAutonFlywheelSpeed(2500);
+  enableFlywheel();
+  wait(2000, msec);
+  fireDisc();
+  disableFlywheel();
+  intake.spin(reverse);
+
+  // cross to center
+  moveRotate(-120, 85, 3000);
+  moveStop(hold);
+  moveLinear(-50, 100, 3000);
+  moveStop(hold);
+
+  // turn and shoot
+  moveRotate(82, 75, 3000);
+  moveStop(hold);
+  setAutonFlywheelSpeed(2300);
+  enableFlywheel();
+  wait(2000, msec);
+  fireDisc();
+  wait(1500, msec);
+  fireDisc();
+  wait(1500, msec);
+  fireDisc();
+  intake.stop(coast);
+  disableFlywheel();
+
+  // turn back to corner
+  moveRotate(-98, 75, 3000);
+  moveStop(hold);
+  moveLinear(-65, 100, 3000);
+  moveStop(hold);
+  moveLinear(15, 100, 3000);
+  moveStop(hold);
+
+  // roller 3
+  moveRotate(45, 100, 3000);
+  moveStop(hold);
+  intake.spin(reverse);
+  wait(500, msec);
+  moveLinear(-24, 100, 3000);
+  moveStop(hold);
+  enableRollerWheel();
+  wait(700, msec);
+  disableRollerWheel();
+  moveLinear(16, 100, 3000);
+  moveStop(hold);
+  intake.stop(coast);
+
+  // roller 4
+  moveRotate(-90, 100, 3000);
+  moveStop(hold);
+  intake.spin(reverse);
+  wait(500, msec);
+  moveLinear(-24, 100, 3000);
+  enableRollerWheel();
+  wait(700, msec);
+  disableRollerWheel();
+  moveLinear(26, 100, 3000);
+  moveStop(hold);
+  intake.stop(coast);
+  moveRotate(45, 100, 3000);
+
+  // rope Launch
+  ropeLauncher.open();
+  moveLinear(-12, 100, 3000);
+  moveStop(hold);
+
+  //END THE TASK
+  taskFlywheel.stop();
+}
+
+
+void oldSkills() {
   // SKILLS (RED SIDE!!!)
   autoAimColor = SIGRED;
 
   setRotGains(.0325, 0.0000001, 0, 20, 10); // update PID gains to tune robot
-  setLinGains(150, 0.07, 0, 20, 10);
+  setLinGains(35, 0.0075, 0, 20, 10);
 
   // shoot preload 1
   flywheelBack.setVelocity(-50, pct);
@@ -115,10 +246,10 @@ void skills() {
   disableFlywheel();
 
   // roller 1
-  moveLinear(-52, 100, 1500);
+  moveLinear(-52, 100, 50000);
   moveStop(hold);
   moveRotate(90, 100, 1000);
-  moveLinear(-5, 100, 1000);
+  moveLinear(-6, 100, 1000);
   enableRollerWheel();
   wait(700, msec);
   disableRollerWheel();
@@ -127,7 +258,7 @@ void skills() {
   while (myGyro.isCalibrating())
     ;
 
-  moveLinear(17, 100, 1000);
+  moveLinear(21, 100, 1000);
   moveStop(hold);
 
   // roller 2
@@ -135,7 +266,7 @@ void skills() {
   moveStop(hold);
   intake.spin(reverse);
   wait(500, msec);
-  moveLinear(-20, 100, 1000);
+  moveLinear(-24, 100, 1000);
   moveStop(hold);
   enableRollerWheel();
   wait(700, msec);
@@ -223,6 +354,8 @@ void skills() {
   ropeLauncher.open();
   moveLinear(-12, 100, 1000);
   moveStop(hold);
+
+
 }
 
 void Auton3() {
@@ -301,32 +434,29 @@ void Auton4() {
 
   setRotGains(.0325, 0.0000001, 0, 20, 10); // update PID gains to tune robot
   setLinGains(150, 0.07, 0, 20, 10);
+  pidInit(&flyWheelPID, 0.0425, 0.0001, 0.02, 15, 15);
 
-  moveLinear(-24, 80, 3000);
+  vex::task taskFlywheel(&autonFlywheelControl);
+
+  moveLinear(-24, 80, 2000);
+  moveStop(hold);
   moveRotate(90, 75, 1500);
   moveLinear(-5, 75, 1000);
   enableRollerWheel();
   wait(500, msec);
   disableRollerWheel();
-  moveLinear(5, 80, 1500);
+  moveLinear(8, 80, 1500);
 
-  /* does not see goal for some reason
-    uint32_t currTime = Brain.Timer.system();
-    while((Brain.Timer.system() - currTime < 2000))
-    {
-      autoAim(autoAimColor);
-    }
-    */
-  moveRotate(2, 75, 1000);
+  moveRotate(12, 75, 1000);
   moveStop(hold);
-  flywheelBack.setVelocity(-75, pct);
-  flywheelFront.setVelocity(-75, pct);
+  setAutonFlywheelSpeed(2500);
   enableFlywheel();
-  wait(2000, msec);
+  wait(1500, msec);
   fireDisc();
-  wait(2000, msec);
+  wait(1500, msec);
   fireDisc();
   disableFlywheel();
+  taskFlywheel.stop();
 }
 
 ///////////////////////////////////////////////
@@ -338,24 +468,28 @@ void Auton5() {
   setRotGains(.0325, 0.0000001, 0, 20, 10); // update PID gains to tune robot
   setLinGains(150, 0.07, 0, 20, 10);
 
-  flywheelBack.setVelocity(-66, pct);
-  flywheelFront.setVelocity(-66, pct);
+  
+  pidInit(&flyWheelPID, 0.0425, 0.0001, 0.02, 20, 15);
+  
+  setAutonFlywheelSpeed(2500);
 
-  enableFlywheel();
+  vex::task taskFlywheel(&autonFlywheelControl);
+  
 
-  wait(4500, msec);
+  wait(5000, msec);
 
   fireDisc();
 
-  flywheelBack.setVelocity(-66, pct);
-  flywheelFront.setVelocity(-66, pct);
-  wait(3000, msec);
+  setAutonFlywheelSpeed(2500);
+
+  wait(2500, msec);
 
   fireDisc();
 
   disableFlywheel();
+  taskFlywheel.stop();
 
-  moveRotate(15, 100, 2000);
+  moveRotate(12, 100, 2000);
   moveLinear(-8, 100, 1000);
 
   enableRollerWheel();
@@ -363,6 +497,7 @@ void Auton5() {
   while ((Brain.Timer.system() - currTime < 500))
     ;
   disableRollerWheel();
+  taskFlywheel.stop();
 }
 
 void Auton6() // Testing the flywheel speed control
@@ -399,31 +534,33 @@ void Auton6() // Testing the flywheel speed control
 
 void Auton7() {
   // BLUE NEAR SHORT
- /*
   autoAimColor = SIGBLUE;
 
   setRotGains(.0325, 0.0000001, 0, 20, 10); // update PID gains to tune robot
   setLinGains(150, 0.07, 0, 20, 10);
 
-  flywheelBack.setVelocity(-73, pct);
-  flywheelFront.setVelocity(-73, pct);
+  
+  pidInit(&flyWheelPID, 0.0425, 0.0001, 0.02, 20, 15);
+  
+  setAutonFlywheelSpeed(2500);
 
-  enableFlywheel();
+  vex::task taskFlywheel(&autonFlywheelControl);
+  
 
-  wait(3500, msec);
+  wait(5000, msec);
 
   fireDisc();
 
-  flywheelBack.setVelocity(-92, pct);
-  flywheelFront.setVelocity(-92, pct);
+  setAutonFlywheelSpeed(2500);
 
-  wait(3000, msec);
+  wait(2500, msec);
 
   fireDisc();
 
   disableFlywheel();
+  taskFlywheel.stop();
 
-  moveRotate(15, 100, 2000);
+  moveRotate(12, 100, 2000);
   moveLinear(-8, 100, 1000);
 
   enableRollerWheel();
@@ -431,76 +568,41 @@ void Auton7() {
   while ((Brain.Timer.system() - currTime < 500))
     ;
   disableRollerWheel();
-*/
-
-  for (int i = 0; i < 8; i++) {
-    moveLinear(12, 100, 10000);
-    moveRotate(-90, 100, 10000);
-  }
+  taskFlywheel.stop();
 }
 
 void Auton8() {
   // BLUE FAR SHORT
+  
 }
 
 void skills2() {
   // RED FAR
   autoAimColor = SIGRED;
 
-  flywheelBack.setVelocity(-100, pct);
-  flywheelFront.setVelocity(-100, pct);
-
-  wait(2000, msec);
-
-  fireDisc();
-
   setRotGains(.0325, 0.0000001, 0, 20, 10); // update PID gains to tune robot
   setLinGains(150, 0.07, 0, 20, 10);
+  pidInit(&flyWheelPID, 0.0425, 0.0001, 0.02, 15, 15);
 
-  flywheelBack.setVelocity(-100, pct);
-  flywheelFront.setVelocity(-100, pct);
+  vex::task taskFlywheel(&autonFlywheelControl);
 
+  moveLinear(-24, 80, 2000);
+  moveStop(hold);
+  moveRotate(90, 75, 1500);
+  moveLinear(-5, 75, 1000);
+  enableRollerWheel();
+  wait(500, msec);
+  disableRollerWheel();
+  moveLinear(8, 80, 1500);
+
+  moveRotate(12, 75, 1000);
+  moveStop(hold);
+  setAutonFlywheelSpeed(2500);
   enableFlywheel();
-
-  wait(3000, msec);
-
+  wait(1500, msec);
+  fireDisc();
+  wait(1500, msec);
   fireDisc();
   disableFlywheel();
-
-  moveRotate(15, 100, 2000);
-  moveStop(hold);
-  moveLinear(-8, 100, 1000);
-
-  enableRollerWheel();
-  uint32_t currTime = Brain.Timer.system();
-  while ((Brain.Timer.system() - currTime < 500))
-    ;
-  disableRollerWheel();
-
-  // move away from roller, then drive to other roller
-  moveLinear(5, 100, 1000);
-  moveRotate(50, 100, 3000);
-  moveLinear(80, 100, 3000);
-  moveStop(hold);
-
-  // rotate a bit further so we stay on our side of the field
-  moveRotate(135, 100, 1000);
-  moveStop(hold);
-
-  // turn around to face the roller
-  moveLinear(-5, 100, 1000); // back up to the roller
-  moveStop(hold);
-  moveRotate(23, 100, 3000);
-  moveLinear(-38, 100, 1500);
-  moveRotate(20, 100, 1000);
-  moveLinear(-6, 100, 1000);
-  moveRotate(5, 100, 1000);
-  moveLinear(-2, 100, 1000);
-
-  // enable roller motor
-  enableRollerWheel();
-  currTime = Brain.Timer.system();
-  while ((Brain.Timer.system() - currTime < 500))
-    ;
-  disableRollerWheel();
+  taskFlywheel.stop();
 }
