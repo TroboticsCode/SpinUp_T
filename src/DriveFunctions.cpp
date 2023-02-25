@@ -148,8 +148,8 @@ void moveLinear(float distance, int velocity, uint32_t timeOut)
     #if defined (CHASSIS_2_MOTOR_INLINE)
       printPIDValues(&driveR_PID);
       DriveR_Power = (velocity/100.0f) * pidCalculate(&driveR_PID, rotations, DriveRight.rotation(rev) / 100.0);
-      DL_Power = (velocity/100.0f) * pidCalculate(&driveL_PID, rotations, DriveLeft.rotation(rev) / 100.0);
-rive
+      DriveL_Power = (velocity/100.0f) * pidCalculate(&driveL_PID, rotations, DriveLeft.rotation(rev) / 100.0);
+
       DriveRight.spin(forward, 12 * DriveR_Power, voltageUnits::volt);
       DriveLeft.spin(forward, 12 * DriveL_Power, voltageUnits::volt);
 
@@ -209,6 +209,8 @@ void moveRotate(double degrees, int velocity, uint32_t timeOut)
   float arcLength = (degrees/360.0f) * CIRCUMFERENCE;
   float rotFactor = ROTATION_FACTOR;
   float rotations = arcLength / rotFactor;
+
+  degrees = get_tAbs_deg() + degrees;
 
 /*
   Brain.Screen.clearScreen();

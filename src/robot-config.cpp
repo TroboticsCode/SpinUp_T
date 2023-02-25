@@ -18,9 +18,9 @@ motor rollerWheel = motor(PORT8, RED, false);
 pneumatics piston = pneumatics(Brain.ThreeWirePort.A);
 pneumatics ropeLauncher = pneumatics(Brain.ThreeWirePort.B);
 
-  encoder leftTracker = encoder(Brain.ThreeWirePort.C);
-  encoder rightTracker = encoder(Brain.ThreeWirePort.E);
-  encoder backTracker = encoder(Brain.ThreeWirePort.G);
+encoder leftTracker = encoder(Brain.ThreeWirePort.C);
+encoder rightTracker = encoder(Brain.ThreeWirePort.E);
+encoder backTracker = encoder(Brain.ThreeWirePort.G);
 
 // VEXcode generated functions
 

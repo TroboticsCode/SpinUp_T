@@ -4,10 +4,10 @@
 #define odoWheelDiameter 2.75f
 
 //double PI = 3.14159;
-#define leftTrackerOffset 4.725f
-#define rightTrackerOffset 4.725f
-#define backTrackerOffset 0.0f
-#define encoderToInches odoWheelDiameter * M_PI/360
+#define leftTrackerOffset 4.475f
+#define rightTrackerOffset 4.475f
+#define backTrackerOffset 3.5f
+#define encoderToInches (odoWheelDiameter * 3.14159f)/360.0f
 
 int odo(void);
 void printCoords(void);

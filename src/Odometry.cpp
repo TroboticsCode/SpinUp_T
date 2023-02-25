@@ -4,6 +4,7 @@
 #include "DriveFunctionsConfig.h"
 #include "PID.h"
 #include "vex.h"
+#include <math.h>
 
 // define some variables for the file
 
@@ -16,50 +17,79 @@ double xAbs = xInitial;
 double yAbs = yInitial;
 double tAbs = tInitial;
 
+double xLastLoop = xInitial;
+double yLastLoop = yInitial;
+double tLastLoop = tInitial;
+
+double deltaX;
+double deltaY;
+double deltaT;
+
+double deltaRight;
+double deltaLeft;
+double deltaBack;
+
+double lastRight = 0;
+double lastLeft = 0;
+double lastBack = 0;
+
 int odo() {
-  Brain.Screen.setCursor(1, 1);
-  Brain.Screen.print("Odometry initiated");
+  //reseting the encoders
+  leftTracker.resetRotation();
+  backTracker.resetRotation();
+  rightTracker.resetRotation();
+  
+
 
   while (true) {
     // sets the intial values to the lastloop variables that we will use to
     // calculate absolute coords
-    static double xLastLoop = xInitial;
-    static double yLastLoop = yInitial;
-    static double tLastLoop = tInitial;
+
 
     // relative change per loop values
-    double deltaX =
-        encoderToInches *
-        ((leftTracker.position(degrees) + rightTracker.position(degrees)) / 2);
 
-    double deltaT =
+    //avoid resetting encoders by tracking new and previous values to find delta
+    deltaRight = rightTracker.position(rotationUnits::deg) - lastRight;
+    deltaLeft = leftTracker.position(rotationUnits::deg) - lastLeft;
+    deltaT = backTracker.position(rotationUnits::deg) - lastBack;
+
+    lastRight = rightTracker.position(rotationUnits::deg);
+    lastLeft = leftTracker.position(rotationUnits::deg);
+    lastBack = backTracker.position(rotationUnits::deg);
+
+    //now find relative change in position
+    deltaX =
         encoderToInches *
-        ((rightTracker.position(degrees) - leftTracker.position(degrees)) /
+        ((deltaRight + deltaLeft) / 2);
+
+    deltaT =
+        encoderToInches *
+        ((deltaRight - deltaLeft) /
          (leftTrackerOffset + rightTrackerOffset));
 
-    double deltaY =
+    deltaY =
         encoderToInches *
-        (backTracker.position(degrees) -
-         backTrackerOffset *
-             (rightTracker.position(degrees) - leftTracker.position(degrees)) /
-             (leftTrackerOffset + rightTrackerOffset));
+        (
+          (deltaRight - deltaLeft) /
+          (leftTrackerOffset + rightTrackerOffset));
 
     // Calculate absolute position from the deltas + the lastloop values
-    xAbs = xLastLoop + deltaX * cos((M_PI / 180) * tLastLoop) -
-           deltaY * sin((M_PI / 180) * tLastLoop);
-    yAbs = yLastLoop + deltaX * sin((M_PI / 180) * tLastLoop) -
-           deltaY * cos((M_PI / 180) * tLastLoop);
+    xAbs += deltaX * cos(tLastLoop) -
+           deltaY * sin(tLastLoop);
+    yAbs = yLastLoop + deltaX * sin(tLastLoop) -
+           deltaY * cos(tLastLoop);
     tAbs = tLastLoop + deltaT;
 
     // update the lastloop values for the next loop
     xLastLoop = xAbs;
     yLastLoop = yAbs;
     tLastLoop = tAbs;
-
     printCoords();
-    leftTracker.resetRotation();
-    rightTracker.resetRotation();
-    backTracker.resetRotation();
+
+    //leftTracker.setRotation(0, rotationUnits::deg);
+    //rightTracker.setRotation(0, rotationUnits::deg);
+    //backTracker.setRotation(0, rotationUnits::deg);
+
     vex::task::sleep(100);
   }
   return 0;
@@ -96,13 +126,25 @@ int angleToTargetCoord(int xTarget, int yTarget) {
 
 // print the absolute coordinates (x,y,theta) to the brain screen
 void printCoords() {
-  Brain.Screen.setCursor(2, 1);
-  Brain.Screen.print("xAbs = ");
-  Brain.Screen.print(xAbs);
-  Brain.Screen.newLine();
-  Brain.Screen.print("yAbs = %d", yAbs);
-  Brain.Screen.newLine();
-  Brain.Screen.print("heading = %d", tAbs);
+  Controller1.Screen.setCursor(1, 1);
+  Controller1.Screen.print("xAbs = ");
+  Controller1.Screen.print(xAbs);
+
+  // Controller1.Screen.newLine();
+  // Controller1.Screen.print("deltaX: ");
+  // Controller1.Screen.print(deltaX);
+
+  // Controller1.Screen.newLine();
+  // Controller1.Screen.print("C: ");
+  // Controller1.Screen.print(encoderToInches);
+
+  Controller1.Screen.newLine();
+  Controller1.Screen.print("yAbs = ");
+  Controller1.Screen.print(yAbs);
+
+  Controller1.Screen.newLine();
+  Controller1.Screen.print("heading = ");
+  Controller1.Screen.print(get_tAbs_deg());
 }
 
 double get_xAbs(void)
@@ -120,5 +162,8 @@ double get_tAbs(void)
 
 double get_tAbs_deg(void)
 {
-  return tAbs * 57.2958;
+  double modVal = 360;
+  double accumDeg = tAbs * 57.2958;
+  
+  return fmod(accumDeg, modVal);
 }

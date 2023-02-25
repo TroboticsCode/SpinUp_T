@@ -16,6 +16,7 @@
 #include "DriveFunctionsConfig.h"
 #include "Functions.h"
 #include "vex.h"
+#include "odometry.h"
 
 using namespace vex;
 
@@ -137,7 +138,7 @@ void usercontrol(void) {
   intake.setVelocity(100, pct);
 
   ropeLauncher.close();
-
+  //vex::task taskOdometry(&odo);
   while (1) {
 
     userDrive();
