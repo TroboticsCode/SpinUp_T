@@ -76,7 +76,7 @@ void Auton2(){
 //Skills
 void Auton3(){
   //Set Gains
-  setRotGains(.02, 0.00000001, 0, 15, 10); // update PID gains to tune robot
+  setRotGains(.015, 0.0000025, 0, 40, 10); // update PID gains to tune robot
   setLinGains(35, 0.0075, 0, 20, 10);
   //pidInit(&flyWheelPID, 0.0425, 0.0001, 0.02, 20, 15);
   
@@ -207,8 +207,8 @@ void Auton3(){
 //Test Autons
 void Auton4(){
   //Set Gains
-  setRotGains(.0325, 0.0000001, 0, 20, 10); // update PID gains to tune robot
-  setLinGains(150, 0.07, 0, 20, 10);
+  setRotGains(.011, 0.000001, 0, 40, 10); // update PID gains to tune robot
+  setLinGains(35, 0.0075, 0, 20, 10);
 
 /* while(true){
 Controller1.Screen.clearScreen();
@@ -225,7 +225,25 @@ wait(100, msec);
 
   vex::task taskOdometry(&odo);
   Controller1.Screen.clearScreen();
-  wait(500, sec);
+
+  for(uint8_t i = 0; i < 100; i++)
+  {
+    moveRotate(90, 100, 50000);
+    moveStop(brake);
+    wait(1, sec);
+
+    moveRotate(90, 100, 50000);
+    moveStop(brake);
+    wait(1, sec);
+
+    moveRotate(-90, 100, 50000);
+    moveStop(hold);
+    wait(1, sec);
+
+    moveRotate(-90, 100, 50000);
+    moveStop(brake);
+    wait(1, sec);
+  }
 
   taskOdometry.stop();
   
