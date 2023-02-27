@@ -76,7 +76,12 @@ void Auton2(){
 //Skills
 void Auton3(){
   //Set Gains
-  setRotGains(.015, 0.0000025, 0, 40, 10); // update PID gains to tune robot
+  //setRotGains(.015, 0.0000025, 0, 40, 10); // update PID gains to tune robot
+  //setRotGains(.0325, 0.0000001, 0, 20, 10); // update PID gains to tune robot
+  
+  setRotGains(0.0125, 0.0000, 1.105, 40, 20);//large turn gains
+  setRotGains(0.013, 0.00001, 1.105, 40, 20);//small turn gains
+
   setLinGains(35, 0.0075, 0, 20, 10);
   //pidInit(&flyWheelPID, 0.0425, 0.0001, 0.02, 20, 15);
   
@@ -87,7 +92,7 @@ void Auton3(){
   //Roller 1 and Preload Shots
   setAutonFlywheelSpeed(2175);
   enableRollerWheel();
-  moveLinear(-10, 100, 700); 
+  moveLinear(-10, 100, 700); //Do not change timeout, it is the time for turning the roller
   disableRollerWheel();
 
   enableFlywheel();
@@ -207,7 +212,8 @@ void Auton3(){
 //Test Autons
 void Auton4(){
   //Set Gains
-  setRotGains(.011, 0.000001, 0, 40, 10); // update PID gains to tune robot
+  setRotGains(0.0125, 0.0000, 1.105, 40, 20);//testing Gains
+  //setRotGains(.011, 0.000001, 0, 40, 10); //Old Gains update PID gains to tune robot
   setLinGains(35, 0.0075, 0, 20, 10);
 
 /* while(true){
@@ -228,19 +234,19 @@ wait(100, msec);
 
   for(uint8_t i = 0; i < 100; i++)
   {
-    moveRotate(90, 100, 50000);
+    moveRotate(45, 100, 50000);
     moveStop(brake);
     wait(1, sec);
 
-    moveRotate(90, 100, 50000);
+    moveRotate(45, 100, 50000);
     moveStop(brake);
     wait(1, sec);
 
-    moveRotate(-90, 100, 50000);
+    moveRotate(-45, 100, 50000);
     moveStop(hold);
     wait(1, sec);
 
-    moveRotate(-90, 100, 50000);
+    moveRotate(-45, 100, 50000);
     moveStop(brake);
     wait(1, sec);
   }

@@ -250,7 +250,7 @@ void moveRotate(double degrees, int velocity, uint32_t timeOut)
 
   wait(10, msec);
 
-  }while((fabs(rotatePID.avgError) > 0.3) && (Brain.timer(timeUnits::msec) - startTime < timeOut)); //error in degrees
+  }while((fabs(rotatePID.avgError) > 0.5) && (Brain.timer(timeUnits::msec) - startTime < timeOut)); //error in degrees
   //end do-while
 }
 

@@ -90,7 +90,7 @@ int odo() {
     //rightTracker.setRotation(0, rotationUnits::deg);
     //backTracker.setRotation(0, rotationUnits::deg);
 
-    vex::task::sleep(100);
+    vex::task::sleep(10);
   }
   return 0;
 }
