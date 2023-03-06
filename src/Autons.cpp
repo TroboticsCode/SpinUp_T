@@ -46,37 +46,89 @@ void Auton1(){
 
 //Far
 void Auton2(){
-  setRotGains(.0325, 0.0000001, 0, 20, 10); // update PID gains to tune robot
+  float smallP = 0.018;
+  float smallI = 0.00001;
+  float smallD = 1.105;
+
+  float largeP = 0.0125;
+  float largeI = 0;
+  float largeD = 1.105;
+  float slewRate = 20;
+  setRotGains(largeP, largeI, largeD, slewRate, 10);//large turn gains
   setLinGains(150, 0.07, 0, 20, 10);
   pidInit(&flyWheelPID, 0.0425, 0.0001, 0.02, 15, 15);
 
   vex::task taskFlywheel(&autonFlywheelControl);
 
-  moveLinear(-20, 80, 2000);
+  moveLinear(-15, 80, 2000);
   moveStop(hold);
-  moveRotate(90, 75, 1500);
-  moveLinear(-5, 75, 1000);
   enableRollerWheel();
-  wait(500, msec);
+  moveRotate(90, 75, 1500);
+  moveLinear(-10, 30, 500); //Do not change timeout, it is the time for turning the roller
   disableRollerWheel();
-  moveLinear(8, 80, 1500);
-
-  moveRotate(18, 75, 1000);
-  moveStop(hold);
-  setAutonFlywheelSpeed(2320);
+  moveLinear(8, 80, 1000); //move away from the roller
+  setAutonFlywheelSpeed(2325);
   enableFlywheel();
-  wait(2500, msec);
-  fireDisc();
+
+  setRotGains(smallP, smallI, smallD, slewRate, 10);
+
+  moveRotate(16, 75, 1000);
+  moveStop(hold);
   wait(1500, msec);
-  fireDisc();
+  fireDisc(); //shoot preload 1
+  wait(500, msec);
+  fireDisc(); //shoot preload 2
   disableFlywheel();
+
+  setRotGains(largeP, largeI, largeD, slewRate, 10);//large turn gains
+
+  // lines up to the other discs
+  moveRotate(113, 80, 1000);
+
+  // enable intake
+  intake.spin(reverse);
+  
+  // move and pick up discs
+  moveLinear(-75, 80, 2000);
+
+  setAutonFlywheelSpeed(2325);
+  enableFlywheel();
+  
+  moveRotate(-80, 80, 1000);
+  wait(1500, msec);
+  fireDisc(); //shoot disk 1
+  wait(500, msec);
+  fireDisc(); //shoot disk 2
+  wait(500, msec);
+  fireDisc(); //shoot disk 3
+  disableFlywheel();
+  moveStop(hold);
+
   taskFlywheel.stop();
 }
 
 //Skills
 void Auton3(){
+  float smallP = 0.018;
+  float smallI = 0.00001;
+  float smallD = 1.105;
+
+  float largeP = 0.0125;
+  float largeI = 0;
+  float largeD = 1.105;
+  float slewRate = 20;
+
   //Set Gains
+<<<<<<< Updated upstream
   setRotGains(.0325, 0.0000001, 0, 20, 10); // update PID gains to tune robot
+=======
+  //setRotGains(.015, 0.0000025, 0, 40, 10); // update PID gains to tune robot
+  //setRotGains(.0325, 0.0000001, 0, 20, 10); // update PID gains to tune robot
+  
+  //setRotGains(0.0125, 0.0000, 1.105, 40, 20);//large turn gains
+  setRotGains(smallP, smallI, smallD, slewRate, 10);//small turn gains
+
+>>>>>>> Stashed changes
   setLinGains(35, 0.0075, 0, 20, 10);
   pidInit(&flyWheelPID, 0.0425, 0.0001, 0.02, 20, 15);
   
@@ -84,11 +136,15 @@ void Auton3(){
   vex::task taskFlywheel(&autonFlywheelControl);
 
   //Roller 1 and Preload Shots
+<<<<<<< Updated upstream
   myGyro.calibrate();
   while (myGyro.isCalibrating()){
     myGyro.resetRotation();
   }
   setAutonFlywheelSpeed(2175);
+=======
+  setAutonFlywheelSpeed(2225);
+>>>>>>> Stashed changes
   enableRollerWheel();
   moveLinear(-10, 100, 700); 
   disableRollerWheel();
@@ -96,6 +152,7 @@ void Auton3(){
   enableFlywheel();
   moveLinear(28, 80, 2000);
   moveStop(hold);
+<<<<<<< Updated upstream
   moveRotate(-14, 100, 2000);
   moveStop(hold);
   myGyro.calibrate();
@@ -106,11 +163,23 @@ void Auton3(){
     fireDisc();
     setAutonFlywheelSpeed(0);
   }
+=======
+
+  moveRotate(-14, 100, 2000);
+  moveStop(hold);
+
+  fireDisc();
+  wait(1000, msec);
+  fireDisc();
+  setAutonFlywheelSpeed(0);
+>>>>>>> Stashed changes
 
   //Roller 2
+  setRotGains(largeP, largeI, largeD, slewRate, 10);//large turn gains
   moveRotate(98, 75, 2000);
-  intake.spin(reverse);
   moveStop(hold);
+
+  intake.spin(reverse);
   moveLinear(-30, 100, 1000);
   moveStop(hold);
   enableRollerWheel();
@@ -121,16 +190,17 @@ void Auton3(){
   //Move and next 3 shots
   moveLinear(15, 100, 1000);
   moveStop(hold);
-  moveRotate(135, 75, 2000);
+  moveRotate(130, 75, 2000);
   moveStop(hold);
   intake.spin(reverse);
-  moveLinear(-35, 100, 2000);
+  moveLinear(-40, 75, 2000);
   moveStop(hold);
 
   //Turn and shoot
-  setAutonFlywheelSpeed(2050);
-  moveRotate(98, 75, 2500);
+  setAutonFlywheelSpeed(2100);
+  moveRotate(95, 75, 2500);
   moveStop(hold);
+<<<<<<< Updated upstream
   myGyro.calibrate();
   while (myGyro.isCalibrating()){
     myGyro.resetRotation();
@@ -142,20 +212,33 @@ void Auton3(){
     wait(700, msec);
     fireDisc();
   }
+=======
+  wait(1000,msec);
+  fireDisc();
+  intake.stop();
+  wait(700, msec);
+  fireDisc();
+  //wait(700, msec);
+  //fireDisc();
+>>>>>>> Stashed changes
 
   //Next 2 Discs
   intake.spin(reverse);
+  moveRotate(5, 75, 1000);
   moveLinear(-10, 100, 1000);
   moveStop(hold);
   moveLinear(20, 100, 1000);
   moveStop(hold);
-  moveRotate(-90, 100, 2000);
+  moveRotate(-80, 100, 2000);
   moveStop(hold);
   moveLinear(-20, 100, 1000);
   moveStop(hold);
-  setAutonFlywheelSpeed(2050);
-  moveRotate(74, 100, 2000);
+  setAutonFlywheelSpeed(2100);
+
+  //setRotGains(smallP, smallI, smallD, slewRate, 10);//small turn gains
+  moveRotate(74, 75, 2000);
   moveStop(hold);
+<<<<<<< Updated upstream
   myGyro.calibrate();
   while (myGyro.isCalibrating()){
     myGyro.resetRotation();
@@ -166,6 +249,17 @@ void Auton3(){
     fireDisc();
     setAutonFlywheelSpeed(0);
   }
+=======
+
+  wait(1000, msec);
+  intake.stop();
+  fireDisc();
+  wait(1000, msec);
+  fireDisc();
+  wait(700, msec);
+  fireDisc();
+  setAutonFlywheelSpeed(0);
+>>>>>>> Stashed changes
   
 
   //Pick up the Next 3 Discs
@@ -176,7 +270,7 @@ void Auton3(){
   moveLinear(-15,75, 1000);
   moveStop(hold);
   setAutonFlywheelSpeed(2100);
-  moveRotate(37, 75, 2000);
+  moveRotate(65, 75, 2000);
   moveStop(hold);
   myGyro.calibrate();
   while (myGyro.isCalibrating()){
@@ -191,8 +285,13 @@ void Auton3(){
   }
   
   //Roller 3
+  setRotGains(smallP, smallI, smallD, slewRate, 10);//large turn gains
+
+  moveRotate(-18, 75, 2000);
+  moveStop(hold);
   moveLinear(-45, 75, 3000);
   moveStop(hold);
+
   enableRollerWheel();
   moveLinear(-10, 100, 700);
   disableRollerWheel();
@@ -200,9 +299,11 @@ void Auton3(){
   moveStop(hold);
 
   //Roller 4
+  setRotGains(largeP, largeI, largeD, slewRate, 10);//large turn gains
   moveRotate(-90, 75, 2000);
   moveStop(hold);
-  moveLinear(-24, 100, 1000);
+
+  moveLinear(-30, 100, 1000);
   enableRollerWheel();
   moveLinear(-10, 100, 700);
   disableRollerWheel();
@@ -211,8 +312,11 @@ void Auton3(){
   //ENDGAME!!!
   moveLinear(18, 100, 1000);
   moveStop(hold);
-  moveRotate(45, 100, 1000);
+
+  setRotGains(smallP, smallI, smallD, slewRate, 10);//small turn gains
+  moveRotate(35, 100, 1000);
   moveStop(hold);
+
   ropeLauncher.open();
   moveLinear(-12, 100, 1000);
   moveStop(hold);
@@ -221,9 +325,124 @@ void Auton3(){
   taskFlywheel.stop();
 }
 
-//Test Autons
+
+//Win Point from easy roller side
 void Auton4(){
+<<<<<<< Updated upstream
+=======
+setRotGains(.018, 0.00001, 1.105, 20, 10); // update PID gains to tune robot
+  setLinGains(35, 0.0075, 0, 20, 10);
+ 
+  pidInit(&flyWheelPID, 0.0425, 0.0001, 0.02, 20, 15);
   
+  vex::task taskFlywheel(&autonFlywheelControl);
+  vex::task taskOdometry(&odo);
+
+  //Roller 1 and Preload Shots
+  setAutonFlywheelSpeed(2300);
+  enableRollerWheel();
+  moveLinear(-5, 100, 700);//Do not change timeout, it is the time for turning the roller
+  disableRollerWheel();
+
+  enableFlywheel();
+  moveLinear(16, 100, 750);
+  moveStop(hold);
+
+  moveRotate(-13, 100, 1500);
+  moveStop(hold);
+
+  fireDisc();
+  wait(500, msec);
+  fireDisc();
+  setAutonFlywheelSpeed(2300);
+
+  setRotGains(0.0125, 0, 1.105, 20, 10); // update PID gains to tune robot
+  moveLinear(-10, 100, 1000);
+  moveStop(hold);
+  intake.spin(reverse);
+  moveRotate(-120, 75, 1500);
+  moveStop(hold);
+  moveLinear(-40, 100, 1500);
+  moveStop(hold);
+  moveRotate(90, 100, 1500);
+  moveStop(hold);
+
+  wait(500, msec);
+  fireDisc();
+  intake.stop(coast);
+  wait(500, msec);
+  fireDisc();
+  wait(500, msec);
+  fireDisc();
+
+  disableFlywheel();
+  taskFlywheel.stop();
+  taskOdometry.stop();
+}
+
+
+
+
+
+
+
+
+//Test Autons
+void Auton5(){
+  //Set Gains
+  setRotGains(0.0125, 0.0000, 1.105, 20, 10);//testing Gains
+  //setRotGains(.011, 0.000001, 0, 40, 10); //Old Gains update PID gains to tune robot
+  setLinGains(35, 0.0075, 0, 20, 10);
+  setRotGains(.018, 0.00001, 1.105, 20, 10); // update PID gains to tune robot
+  setLinGains(35, 0.0075, 0, 20, 10);
+ 
+  pidInit(&flyWheelPID, 0.0425, 0.0001, 0.02, 20, 15);
+>>>>>>> Stashed changes
+  
+  vex::task taskFlywheel(&autonFlywheelControl);
+  vex::task taskOdometry(&odo);
+
+  //Roller 1 and Preload Shots
+  setAutonFlywheelSpeed(2275);
+  enableRollerWheel();
+  moveLinear(-10, 100, 700); //Do not change timeout, it is the time for turning the roller
+  disableRollerWheel();
+
+  enableFlywheel();
+  moveLinear(16, 100, 750);
+  moveStop(hold);
+
+  moveRotate(-13, 100, 1500);
+  moveStop(hold);
+
+  fireDisc();
+  wait(500, msec);
+  fireDisc();
+  setAutonFlywheelSpeed(2300);
+
+  setRotGains(0.0125, 0, 1.105, 20, 10); // update PID gains to tune robot
+  moveLinear(-10, 100, 1000);
+  moveStop(hold);
+  intake.spin(reverse);
+  moveRotate(-120, 75, 1500);
+  moveStop(hold);
+  moveLinear(-40, 100, 1500);
+  moveStop(hold);
+  moveRotate(95, 100, 1500);
+  moveStop(hold);
+
+  wait(500, msec);
+  fireDisc();
+  wait(500, msec);
+  fireDisc();
+  wait(500, msec);
+  fireDisc();
+
+  setAutonFlywheelSpeed(0);
+  intake.stop(coast);
+  taskFlywheel.stop();
+  taskOdometry.stop();
+
 }
 
 

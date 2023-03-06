@@ -12,7 +12,8 @@
 #define AutonNear           1
 #define AutonFar            2
 #define AutonSkills         3
-#define AutonTest           4
+#define AutonWinPoint       4
+#define AutonTest           5
 
 
 extern int state;
@@ -27,10 +28,13 @@ void Auton2(void);
 void Auton3(void);
 void Auton4(void);
 void Auton5(void);
+<<<<<<< Updated upstream
 void Auton6(void);
 void Auton7(void);
 void Auton8(void);
 void skills(void);
 void skills2(void);
+=======
+>>>>>>> Stashed changes
 
 #endif

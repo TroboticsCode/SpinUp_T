@@ -84,8 +84,12 @@ void autonomous(void) {
     Auton3();
     break;
 
-  case AutonTest:
+  case AutonWinPoint:
     Auton4();
+    break;
+
+  case AutonTest:
+    Auton5();
     break;
 
   // Default = NO autonomous

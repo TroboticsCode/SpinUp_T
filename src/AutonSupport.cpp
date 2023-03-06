@@ -46,8 +46,13 @@ void cycle_autons(void)
     }
     else if (state == AutonSkills)
     {
+        state = AutonWinPoint;
+        strcpy(state_name, "Auton Win Point");
+    }
+    else if (state == AutonWinPoint)
+    {
         state = AutonTest;
-        strcpy(state_name, "Auton Test");
+        strcpy(state_name, "Test");
     }
     else if (state == AutonTest)
     {
